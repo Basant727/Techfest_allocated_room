@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Techfest Hospitality Allocation</title>
+    <title>Techfest Hospitality Allocation System</title>
     <style>
         * {
             margin: 0;
@@ -12,8 +12,8 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e27;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -23,30 +23,47 @@
             overflow-x: hidden;
         }
 
-        /* Animated background particles */
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, #1e3c72 0%, #2a5298 25%, #0a0e27 50%);
+            animation: rotateGradient 20s linear infinite;
+            z-index: -2;
+        }
+
+        @keyframes rotateGradient {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Floating particles */
         .particles {
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 1;
+            top: 0;
+            left: 0;
+            z-index: -1;
         }
 
         .particle {
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.3);
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.5);
+            pointer-events: none;
             border-radius: 50%;
-            animation: float 15s infinite linear;
+            animation: float-up 15s infinite linear;
         }
 
-        @keyframes float {
-            from {
-                transform: translateY(100vh) translateX(0);
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
                 opacity: 0;
             }
             10% {
@@ -55,87 +72,109 @@
             90% {
                 opacity: 1;
             }
-            to {
-                transform: translateY(-100vh) translateX(100px);
+            100% {
+                transform: translateY(-100vh) translateX(100px) scale(1.5);
                 opacity: 0;
             }
         }
 
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             position: relative;
             z-index: 10;
         }
 
-        .logo-container {
-            text-align: center;
-            margin-bottom: 30px;
-            animation: fadeInDown 0.8s ease;
+        /* 3D Logo Animation */
+        .logo-3d-container {
+            perspective: 1000px;
+            margin-bottom: 40px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .logo {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #4a5a94 0%, #f4844e 100%);
-            border-radius: 50%;
-            display: inline-flex;
+        .logo-3d {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate3d 10s infinite linear;
+        }
+
+        @keyframes rotate3d {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-
-        .logo::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%); }
-            100% { transform: translateX(100%) translateY(100%); }
-        }
-
-        .logo-icon {
-            width: 70px;
-            height: 70px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo-text {
+            font-size: 24px;
             color: white;
-            margin-top: 15px;
-            font-size: 28px;
             font-weight: bold;
-            letter-spacing: 1px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .cube-face:nth-child(1) { transform: rotateY(0deg) translateZ(75px); }
+        .cube-face:nth-child(2) { transform: rotateY(90deg) translateZ(75px); }
+        .cube-face:nth-child(3) { transform: rotateY(180deg) translateZ(75px); }
+        .cube-face:nth-child(4) { transform: rotateY(270deg) translateZ(75px); }
+        .cube-face:nth-child(5) { transform: rotateX(90deg) translateZ(75px); }
+        .cube-face:nth-child(6) { transform: rotateX(-90deg) translateZ(75px); }
+
+        .title-container {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .main-title {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 50%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(240, 147, 251, 0.8)); }
         }
 
         .subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 16px;
-            margin-top: 5px;
-            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
         }
 
-        .search-card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: fadeInUp 0.8s ease;
+        /* Glassmorphism card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.8s ease;
         }
 
-        @keyframes fadeInDown {
+        @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(-30px);
+                transform: translateY(50px);
             }
             to {
                 opacity: 1;
@@ -154,63 +193,150 @@
             }
         }
 
-        .form-title {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 25px;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 15px 20px;
-            font-size: 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
+        .upload-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 16px;
+            border: 2px dashed rgba(102, 126, 234, 0.3);
             transition: all 0.3s ease;
-            background: #f9f9f9;
         }
 
-        .input-field:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        .upload-section:hover {
+            background: rgba(102, 126, 234, 0.15);
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-2px);
         }
 
-        .input-label {
-            position: absolute;
-            top: -10px;
-            left: 15px;
-            background: white;
-            padding: 0 5px;
-            color: #667eea;
-            font-size: 14px;
-            font-weight: 500;
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
         }
 
-        .search-btn {
+        .file-input {
+            display: none;
+        }
+
+        .file-input-label {
+            display: block;
             width: 100%;
             padding: 15px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border: none;
+            text-align: center;
             border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
             cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .search-btn::before {
+        .file-input-label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+        }
+
+        .file-input-label:hover::before {
+            left: 100%;
+        }
+
+        .file-input-label:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .file-status {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 8px;
+            color: #4CAF50;
+            text-align: center;
+            display: none;
+        }
+
+        .file-status.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .search-section {
+            margin-top: 20px;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .floating-label {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2px 8px;
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .search-btn::after {
             content: '';
             position: absolute;
             top: 50%;
@@ -218,164 +344,215 @@
             width: 0;
             height: 0;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.4);
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
 
-        .search-btn:hover::before {
-            width: 300px;
-            height: 300px;
+        .search-btn:hover::after {
+            width: 400px;
+            height: 400px;
         }
 
         .search-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(240, 93, 108, 0.4);
         }
 
-        .results-card {
-            background: white;
+        .search-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Results Section */
+        .results-container {
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+
+        .results-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 30px;
-            margin-top: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            display: none;
             animation: slideIn 0.5s ease;
         }
 
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateX(-30px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(0);
             }
-        }
-
-        .results-card.show {
-            display: block;
         }
 
         .result-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         .result-title {
-            font-size: 20px;
-            color: #333;
-            font-weight: 600;
+            font-size: 24px;
+            color: white;
+            font-weight: 700;
         }
 
-        .techfest-id {
+        .id-badge {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
+            padding: 8px 20px;
+            border-radius: 25px;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
+            animation: pulse 2s infinite;
         }
 
-        .summary-box {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .summary-stats {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(240, 147, 251, 0.2) 100%);
+            border-radius: 16px;
             padding: 20px;
-            border-radius: 15px;
             margin-bottom: 25px;
             text-align: center;
         }
 
-        .summary-text {
-            font-size: 18px;
-            font-weight: 500;
+        .stats-number {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .room-section {
-            margin-bottom: 20px;
+        .stats-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            margin-top: 5px;
         }
 
-        .section-title {
-            font-size: 18px;
-            color: #555;
-            margin-bottom: 15px;
-            font-weight: 600;
+        .allocation-section {
+            margin-top: 25px;
+        }
+
+        .section-header {
             display: flex;
             align-items: center;
+            margin-bottom: 15px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
         }
 
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 20px;
+        .section-icon {
+            width: 30px;
+            height: 30px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin-right: 10px;
-            border-radius: 2px;
+            border-radius: 8px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
 
-        .room-card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 12px;
+        .room-item {
+            background: rgba(255, 255, 255, 0.05);
             border-left: 4px solid #667eea;
-            transition: all 0.3s ease;
-        }
-
-        .room-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .room-info {
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .room-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .room-details {
             display: flex;
-            gap: 20px;
+            gap: 30px;
             align-items: center;
         }
 
-        .room-number {
-            font-size: 16px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .room-password {
-            background: #667eea;
-            color: white;
+        .person-tag {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
             padding: 5px 12px;
             border-radius: 8px;
             font-size: 14px;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 1px;
+            font-weight: 600;
         }
 
-        .person-label {
-            font-size: 14px;
-            color: #777;
+        .room-number {
+            color: white;
+            font-size: 16px;
             font-weight: 500;
         }
 
-        .error-message {
-            background: #ff4757;
+        .password-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
-            padding: 15px;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 15px rgba(240, 93, 108, 0.3);
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 50px;
+            height: 50px;
+            margin: 30px auto;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-spinner.show {
+            display: block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            display: none;
+            background: rgba(244, 67, 54, 0.1);
+            border: 2px solid rgba(244, 67, 54, 0.3);
+            color: #ff6b6b;
+            padding: 20px;
             border-radius: 12px;
             text-align: center;
             margin-top: 20px;
-            display: none;
             animation: shake 0.5s;
         }
 
@@ -389,170 +566,216 @@
             display: block;
         }
 
-        .loading {
-            display: none;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f0f0f0;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         @media (max-width: 480px) {
-            .search-card {
-                padding: 30px 20px;
+            .main-title {
+                font-size: 32px;
             }
             
-            .room-info {
-                flex-direction: column;
-                align-items: flex-start;
+            .glass-card {
+                padding: 25px;
             }
             
             .room-details {
                 flex-direction: column;
                 gap: 10px;
-                width: 100%;
+                align-items: flex-start;
+            }
+            
+            .room-item {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Animated particles background -->
-    <div class="particles" id="particles"></div>
+    <!-- Animated Particles Background -->
+    <div class="particles" id="particlesContainer"></div>
 
     <div class="container">
-        <!-- Logo Section -->
-        <div class="logo-container">
-            <div class="logo">
-                <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Building icon -->
-                    <rect x="35" y="30" width="30" height="50" fill="white" opacity="0.9"/>
-                    <rect x="40" y="35" width="8" height="8" fill="#667eea"/>
-                    <rect x="52" y="35" width="8" height="8" fill="#667eea"/>
-                    <rect x="40" y="47" width="8" height="8" fill="#667eea"/>
-                    <rect x="52" y="47" width="8" height="8" fill="#667eea"/>
-                    <rect x="45" y="65" width="10" height="15" fill="#667eea"/>
-                    
-                    <!-- Arrow -->
-                    <path d="M25 25 L25 50 Q25 60 35 60 L40 60" stroke="white" stroke-width="3" fill="none"/>
-                    <path d="M20 30 L25 25 L30 30" stroke="white" stroke-width="3" fill="none"/>
-                    
-                    <!-- WiFi symbol -->
-                    <circle cx="50" cy="58" r="2" fill="white"/>
-                    <path d="M45 54 Q50 50 55 54" stroke="white" stroke-width="2" fill="none"/>
-                    <path d="M42 51 Q50 46 58 51" stroke="white" stroke-width="2" fill="none" opacity="0.7"/>
-                </svg>
+        <!-- 3D Logo -->
+        <div class="logo-3d-container">
+            <div class="logo-3d">
+                <div class="cube-face">TECH</div>
+                <div class="cube-face">FEST</div>
+                <div class="cube-face">2025</div>
+                <div class="cube-face">ROOM</div>
+                <div class="cube-face">🏠</div>
+                <div class="cube-face">📍</div>
             </div>
-            <div class="logo-text">TECHFEST</div>
-            <div class="subtitle">HOSPITALITY ALLOCATE</div>
         </div>
 
-        <!-- Search Card -->
-        <div class="search-card">
-            <h2 class="form-title">Check Your Room Allocation</h2>
-            
-            <div class="input-group">
-                <label class="input-label">Techfest ID</label>
-                <input 
-                    type="text" 
-                    class="input-field" 
-                    id="techfestId" 
-                    placeholder="Enter your Techfest ID"
-                    onkeypress="if(event.key === 'Enter') searchAllocation()"
-                >
-            </div>
-            
-            <button class="search-btn" onclick="searchAllocation()">
-                Search Allocation
-            </button>
+        <!-- Title -->
+        <div class="title-container">
+            <h1 class="main-title">TECHFEST</h1>
+            <p class="subtitle">Hospitality Allocate</p>
         </div>
 
-        <!-- Loading Spinner -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-        </div>
-
-        <!-- Error Message -->
-        <div class="error-message" id="errorMessage">
-            No allocation found for this Techfest ID. Please check your ID and try again.
-        </div>
-
-        <!-- Results Card -->
-        <div class="results-card" id="resultsCard">
-            <div class="result-header">
-                <div class="result-title">Allocation Details</div>
-                <div class="techfest-id" id="displayId">TF2024001</div>
-            </div>
-            
-            <div class="summary-box">
-                <div class="summary-text" id="summaryText">
-                    Total Accommodation: 3 (2 Boys, 1 Girl)
+        <!-- Main Card -->
+        <div class="glass-card">
+            <!-- File Upload Section -->
+            <div class="upload-section">
+                <div class="file-input-wrapper">
+                    <input type="file" id="excelFile" class="file-input" accept=".xlsx,.xls" onchange="handleFileUpload(event)">
+                    <label for="excelFile" class="file-input-label">
+                        📁 Upload Excel File (sdhfjgk.xlsx)
+                    </label>
+                </div>
+                <div class="file-status" id="fileStatus">
+                    ✅ File loaded successfully!
                 </div>
             </div>
-            
-            <div id="allocationsContainer">
-                <!-- Allocations will be dynamically inserted here -->
+
+            <!-- Search Section -->
+            <div class="search-section">
+                <div class="input-container">
+                    <label class="floating-label">TECHFEST ID</label>
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        id="techfestId" 
+                        placeholder="Enter your Techfest ID..."
+                        onkeypress="if(event.key === 'Enter') searchAllocation()"
+                    >
+                </div>
+                
+                <button class="search-btn" onclick="searchAllocation()">
+                    🔍 Search Allocation
+                </button>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingSpinner"></div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage">
+                ❌ No allocation found for this Techfest ID
+            </div>
+
+            <!-- Results Container -->
+            <div class="results-container" id="resultsContainer">
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-title">Allocation Details</div>
+                        <div class="id-badge" id="displayId">-</div>
+                    </div>
+                    
+                    <div class="summary-stats">
+                        <div class="stats-number" id="totalCount">0</div>
+                        <div class="stats-text" id="statsText">Total Accommodations</div>
+                    </div>
+                    
+                    <div id="allocationsContent">
+                        <!-- Dynamic content will be inserted here -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        // Create animated particles
+        // Create floating particles
         function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
+            const container = document.getElementById('particlesContainer');
+            for (let i = 0; i < 100; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 particle.style.left = Math.random() * 100 + '%';
                 particle.style.animationDelay = Math.random() * 15 + 's';
-                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-                particlesContainer.appendChild(particle);
+                particle.style.animationDuration = (15 + Math.random() * 20) + 's';
+                container.appendChild(particle);
             }
         }
         createParticles();
 
-        // Sample data structure - Replace with actual Excel data
-        const accommodationData = {
-            'TF2024001': {
-                boys: [
-                    { room: '101', password: '1234' },
-                    { room: '101', password: '1234' }
-                ],
-                girls: [
-                    { room: '201', password: '5678' }
-                ]
-            },
-            'TF2024002': {
-                boys: [
-                    { room: '102', password: '2345' }
-                ],
-                girls: []
-            },
-            'TF2024003': {
-                boys: [],
-                girls: [
-                    { room: '202', password: '6789' },
-                    { room: '203', password: '7890' }
-                ]
-            }
-        };
+        // Global variable to store Excel data
+        let excelData = null;
 
+        // Handle Excel file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, {type: 'array'});
+                        
+                        // Get the first sheet (hostels sheet based on your image)
+                        const sheetName = workbook.SheetNames[0];
+                        const worksheet = workbook.Sheets[sheetName];
+                        
+                        // Convert to JSON
+                        const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+                        
+                        // Process the data
+                        processExcelData(jsonData);
+                        
+                        // Show success message
+                        const statusElement = document.getElementById('fileStatus');
+                        statusElement.textContent = `✅ File "${file.name}" loaded successfully!`;
+                        statusElement.classList.add('show');
+                        
+                        setTimeout(() => {
+                            statusElement.classList.remove('show');
+                        }, 3000);
+                    } catch (error) {
+                        console.error('Error reading file:', error);
+                        showError('Error reading Excel file. Please check the file format.');
+                    }
+                };
+                
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        // Process Excel data into searchable format
+        function processExcelData(data) {
+            excelData = {};
+            
+            // Skip header row and process data
+            // Based on your image: columns are hostel_type, hostel_name, room_no, max_occupancy, etc.
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                if (row && row.length > 0) {
+                    // Extract data based on visible columns in your image
+                    const hostelType = row[0]; // 'Boys' or 'Girls'
+                    const hostelName = row[1]; // 'HostelA', 'HostelB'
+                    const roomNo = row[2]; // '101', '201'
+                    const lockPassword = row[7]; // '1234', '5678'
+                    const allocatedId = row[9]; // This might contain the Techfest ID
+                    
+                    // If there's an allocated ID, store the allocation
+                    if (allocatedId) {
+                        if (!excelData[allocatedId]) {
+                            excelData[allocatedId] = {
+                                boys: [],
+                                girls: []
+                            };
+                        }
+                        
+                        const allocation = {
+                            hostel: hostelName,
+                            room: roomNo,
+                            password: lockPassword
+                        };
+                        
+                        if (hostelType === 'Boys') {
+                            excelData[allocatedId].boys.push(allocation);
+                        } else if (hostelType === 'Girls') {
+                            excelData[allocatedId].girls.push(allocation);
+                        }
+                    }
+                }
+            }
+            
+            console.log('Processed Excel Data:', excelData);
+        }
+
+        // Search for allocation
         function searchAllocation() {
             const techfestId = document.getElementById('techfestId').value.trim();
             
@@ -561,24 +784,29 @@
                 return;
             }
             
-            // Show loading
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('resultsCard').classList.remove('show');
+            if (!excelData) {
+                showError('Please upload the Excel file first');
+                return;
+            }
+            
+            // Show loading spinner
+            document.getElementById('loadingSpinner').classList.add('show');
+            document.getElementById('resultsContainer').classList.remove('show');
             document.getElementById('errorMessage').classList.remove('show');
             
-            // Simulate API call delay
+            // Simulate processing delay for better UX
             setTimeout(() => {
-                document.getElementById('loading').classList.remove('show');
+                document.getElementById('loadingSpinner').classList.remove('show');
                 
-                // Check if ID exists in data
-                if (accommodationData[techfestId]) {
-                    displayResults(techfestId, accommodationData[techfestId]);
+                if (excelData[techfestId]) {
+                    displayResults(techfestId, excelData[techfestId]);
                 } else {
-                    showError('No allocation found for this Techfest ID. Please check your ID and try again.');
+                    showError(`No allocation found for Techfest ID: ${techfestId}`);
                 }
-            }, 1000);
+            }, 800);
         }
-        
+
+        // Display search results
         function displayResults(techfestId, data) {
             const boysCount = data.boys.length;
             const girlsCount = data.girls.length;
@@ -586,79 +814,88 @@
             
             // Update summary
             document.getElementById('displayId').textContent = techfestId;
+            document.getElementById('totalCount').textContent = totalCount;
             
-            let summaryText = `Total Accommodation: ${totalCount}`;
+            let statsText = 'Total Accommodations';
             if (totalCount > 0) {
                 const parts = [];
                 if (boysCount > 0) parts.push(`${boysCount} Boy${boysCount > 1 ? 's' : ''}`);
                 if (girlsCount > 0) parts.push(`${girlsCount} Girl${girlsCount > 1 ? 's' : ''}`);
-                summaryText += ` (${parts.join(', ')})`;
+                statsText = parts.join(' & ');
             }
-            document.getElementById('summaryText').textContent = summaryText;
+            document.getElementById('statsText').textContent = statsText;
             
             // Build allocations HTML
             let allocationsHTML = '';
             
             // Boys section
             if (boysCount > 0) {
-                allocationsHTML += '<div class="room-section">';
-                allocationsHTML += '<div class="section-title">Boys Accommodation</div>';
+                allocationsHTML += `
+                    <div class="allocation-section">
+                        <div class="section-header">
+                            <div class="section-icon">👦</div>
+                            Boys Accommodation
+                        </div>
+                `;
+                
                 data.boys.forEach((boy, index) => {
                     allocationsHTML += `
-                        <div class="room-card">
-                            <div class="room-info">
-                                <div class="room-details">
-                                    <span class="person-label">Boy ${index + 1}</span>
-                                    <span class="room-number">Room: ${boy.room}</span>
-                                </div>
-                                <span class="room-password">PIN: ${boy.password}</span>
+                        <div class="room-item">
+                            <div class="room-details">
+                                <span class="person-tag">Boy ${index + 1}</span>
+                                <span class="room-number">📍 ${boy.hostel || 'Hostel'} - Room ${boy.room}</span>
                             </div>
+                            <span class="password-badge">${boy.password || 'N/A'}</span>
                         </div>
                     `;
                 });
+                
                 allocationsHTML += '</div>';
             }
             
             // Girls section
             if (girlsCount > 0) {
-                allocationsHTML += '<div class="room-section">';
-                allocationsHTML += '<div class="section-title">Girls Accommodation</div>';
+                allocationsHTML += `
+                    <div class="allocation-section">
+                        <div class="section-header">
+                            <div class="section-icon">👧</div>
+                            Girls Accommodation
+                        </div>
+                `;
+                
                 data.girls.forEach((girl, index) => {
                     allocationsHTML += `
-                        <div class="room-card">
-                            <div class="room-info">
-                                <div class="room-details">
-                                    <span class="person-label">Girl ${index + 1}</span>
-                                    <span class="room-number">Room: ${girl.room}</span>
-                                </div>
-                                <span class="room-password">PIN: ${girl.password}</span>
+                        <div class="room-item">
+                            <div class="room-details">
+                                <span class="person-tag">Girl ${index + 1}</span>
+                                <span class="room-number">📍 ${girl.hostel || 'Hostel'} - Room ${girl.room}</span>
                             </div>
+                            <span class="password-badge">${girl.password || 'N/A'}</span>
                         </div>
                     `;
                 });
+                
                 allocationsHTML += '</div>';
             }
             
-            document.getElementById('allocationsContainer').innerHTML = allocationsHTML;
-            document.getElementById('resultsCard').classList.add('show');
+            document.getElementById('allocationsContent').innerHTML = allocationsHTML;
+            document.getElementById('resultsContainer').classList.add('show');
         }
-        
+
+        // Show error message
         function showError(message) {
             const errorElement = document.getElementById('errorMessage');
-            errorElement.textContent = message;
+            errorElement.textContent = '❌ ' + message;
             errorElement.classList.add('show');
+            
             setTimeout(() => {
                 errorElement.classList.remove('show');
             }, 5000);
         }
 
-        // Add example hint
-        document.getElementById('techfestId').addEventListener('focus', function() {
-            this.placeholder = 'e.g., TF2024001';
-        });
-        
-        document.getElementById('techfestId').addEventListener('blur', function() {
-            this.placeholder = 'Enter your Techfest ID';
+        // Auto-focus on input field
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('techfestId').focus();
         });
     </script>
 </body>
