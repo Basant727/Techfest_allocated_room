@@ -827,3 +827,151 @@
             };
             console.log('Sample data created:', excelData);
         }
+
+        // Main search function
+        function searchAllocation() {
+            const techfestId = document.getElementById('techfestId').value.trim();
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const errorMessage = document.getElementById('errorMessage');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const displayId = document.getElementById('displayId');
+            const totalCount = document.getElementById('totalCount');
+            const statsText = document.getElementById('statsText');
+            const allocationsContent = document.getElementById('allocationsContent');
+            
+            // Hide previous results and error
+            resultsContainer.classList.remove('show');
+            errorMessage.classList.remove('show');
+            
+            // Validate input
+            if (!techfestId) {
+                showError("Please enter a Techfest ID");
+                return;
+            }
+            
+            // Show loading spinner
+            loadingSpinner.classList.add('show');
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                loadingSpinner.classList.remove('show');
+                
+                // Check if data is loaded
+                if (!excelData) {
+                    showError("System data not loaded yet. Please try again.");
+                    return;
+                }
+                
+                // Search for the ID in our data
+                const allocation = excelData[techfestId];
+                
+                if (allocation) {
+                    // Display results
+                    displayId.textContent = techfestId;
+                    
+                    const totalBoys = allocation.boys.length;
+                    const totalGirls = allocation.girls.length;
+                    const totalAccommodations = totalBoys + totalGirls;
+                    
+                    totalCount.textContent = totalAccommodations;
+                    statsText.textContent = `Total Accommodations (${totalBoys} Boys, ${totalGirls} Girls)`;
+                    
+                    // Build allocations HTML
+                    let html = '';
+                    
+                    // Boys accommodations
+                    if (totalBoys > 0) {
+                        html += '<h3 style="color: #FFD700; margin-bottom: 15px; font-family: \'Bebas Neue\', cursive; letter-spacing: 2px;">Boys Accommodations</h3>';
+                        allocation.boys.forEach(room => {
+                            html += `
+                                <div class="room-item">
+                                    <div class="room-details">
+                                        <span class="person-tag">BOYS</span>
+                                        <span class="room-number">${room.hostel} - Room ${room.room}</span>
+                                    </div>
+                                    <div class="password-badge">${room.password}</div>
+                                </div>
+                            `;
+                        });
+                    }
+                    
+                    // Girls accommodations
+                    if (totalGirls > 0) {
+                        html += '<h3 style="color: #FF69B4; margin: 20px 0 15px 0; font-family: \'Bebas Neue\', cursive; letter-spacing: 2px;">Girls Accommodations</h3>';
+                        allocation.girls.forEach(room => {
+                            html += `
+                                <div class="room-item">
+                                    <div class="room-details">
+                                        <span class="person-tag">GIRLS</span>
+                                        <span class="room-number">${room.hostel} - Room ${room.room}</span>
+                                    </div>
+                                    <div class="password-badge">${room.password}</div>
+                                </div>
+                            `;
+                        });
+                    }
+                    
+                    allocationsContent.innerHTML = html;
+                    resultsContainer.classList.add('show');
+                } else {
+                    showError(`No allocation found for Techfest ID: ${techfestId}`);
+                }
+            }, 1500); // Simulate network delay
+        }
+
+        // Helper function to show error messages
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = `❌ ${message}`;
+            errorMessage.classList.add('show');
+        }
+
+        // Initialize the application when page loads
+        window.addEventListener('load', function() {
+            // Load Excel data automatically
+            loadExcelFromBackend();
+            
+            // Add some animation to the page
+            document.querySelector('.glass-card').style.animation = 'slideUp 0.8s ease';
+        });
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUp {
+                from { 
+                    opacity: 0; 
+                    transform: translateY(50px) scale(0.95); 
+                }
+                to { 
+                    opacity: 1; 
+                    transform: translateY(0) scale(1); 
+                }
+            }
+            
+            @keyframes slideIn {
+                from { 
+                    opacity: 0; 
+                    transform: translateX(-30px); 
+                }
+                to { 
+                    opacity: 1; 
+                    transform: translateX(0); 
+                }
+            }
+            
+            @keyframes fadeInUp {
+                from { 
+                    opacity: 0; 
+                    transform: translateY(30px); 
+                }
+                to { 
+                    opacity: 1; 
+                    transform: translateY(0); 
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
