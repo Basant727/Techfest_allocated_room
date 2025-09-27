@@ -6,7 +6,7 @@
     <title>Techfest Hospitality Allocation System</title>
     
     <!-- Premium Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Bebas+Neue&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Bebas+Neue&family=Montserrat:wght@300;400;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -112,7 +112,7 @@
 
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             position: relative;
             z-index: 10;
         }
@@ -120,8 +120,8 @@
         /* Enhanced 3D Curved Logo with depth */
         .logo-3d-container {
             perspective: 1500px;
-            margin-bottom: 60px;
-            height: 250px;
+            margin-bottom: 40px;
+            height: 200px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -129,11 +129,11 @@
         }
 
         .logo-3d {
-            width: 200px;
-            height: 200px;
+            width: 180px;
+            height: 180px;
             position: relative;
             transform-style: preserve-3d;
-            animation: complexRotate 15s infinite cubic-bezier(0.4, 0, 0.6, 1);
+            animation: complexRotate 20s infinite linear;
         }
 
         @keyframes complexRotate {
@@ -141,35 +141,35 @@
                 transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
             }
             25% { 
-                transform: rotateX(180deg) rotateY(90deg) rotateZ(45deg);
+                transform: rotateX(90deg) rotateY(90deg) rotateZ(45deg);
             }
             50% { 
-                transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg);
+                transform: rotateX(180deg) rotateY(180deg) rotateZ(90deg);
             }
             75% { 
-                transform: rotateX(180deg) rotateY(270deg) rotateZ(180deg);
+                transform: rotateX(270deg) rotateY(270deg) rotateZ(135deg);
             }
             100% { 
-                transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+                transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg);
             }
         }
 
         /* Spherical faces for 3D curved effect */
         .sphere-face {
             position: absolute;
-            width: 200px;
-            height: 200px;
+            width: 180px;
+            height: 180px;
             background: linear-gradient(135deg, 
                 rgba(255, 215, 0, 0.9) 0%, 
                 rgba(148, 0, 211, 0.9) 50%, 
                 rgba(255, 0, 128, 0.9) 100%);
-            border-radius: 30% 70% 70% 30% / 60% 40% 60% 40%;
+            border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%;
             border: 3px solid rgba(255, 255, 255, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Cinzel', serif;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -177,46 +177,52 @@
             box-shadow: 
                 0 10px 30px rgba(255, 215, 0, 0.3),
                 inset 0 0 20px rgba(255, 255, 255, 0.2);
+            transition: all 0.5s ease;
+        }
+
+        .sphere-face:hover {
+            transform: translateZ(30px) scale(1.1);
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.5);
         }
 
         .sphere-face:nth-child(1) { 
-            transform: rotateY(0deg) translateZ(100px);
-            animation: pulse 2s infinite alternate;
+            transform: rotateY(0deg) translateZ(90px);
+            animation: pulse 3s infinite alternate;
         }
         .sphere-face:nth-child(2) { 
-            transform: rotateY(60deg) translateZ(100px);
+            transform: rotateY(60deg) translateZ(90px);
             background: linear-gradient(135deg, 
                 rgba(0, 191, 255, 0.9) 0%, 
                 rgba(255, 0, 255, 0.9) 100%);
         }
         .sphere-face:nth-child(3) { 
-            transform: rotateY(120deg) translateZ(100px);
+            transform: rotateY(120deg) translateZ(90px);
             background: linear-gradient(135deg, 
                 rgba(255, 105, 180, 0.9) 0%, 
                 rgba(255, 215, 0, 0.9) 100%);
         }
         .sphere-face:nth-child(4) { 
-            transform: rotateY(180deg) translateZ(100px);
+            transform: rotateY(180deg) translateZ(90px);
             background: linear-gradient(135deg, 
                 rgba(50, 205, 50, 0.9) 0%, 
                 rgba(255, 69, 0, 0.9) 100%);
         }
         .sphere-face:nth-child(5) { 
-            transform: rotateY(240deg) translateZ(100px);
+            transform: rotateY(240deg) translateZ(90px);
             background: linear-gradient(135deg, 
                 rgba(255, 0, 128, 0.9) 0%, 
                 rgba(0, 255, 255, 0.9) 100%);
         }
         .sphere-face:nth-child(6) { 
-            transform: rotateY(300deg) translateZ(100px);
+            transform: rotateY(300deg) translateZ(90px);
             background: linear-gradient(135deg, 
                 rgba(255, 140, 0, 0.9) 0%, 
                 rgba(148, 0, 211, 0.9) 100%);
         }
 
         @keyframes pulse {
-            from { transform: rotateY(0deg) translateZ(100px) scale(1); }
-            to { transform: rotateY(0deg) translateZ(120px) scale(1.1); }
+            from { transform: rotateY(0deg) translateZ(90px) scale(1); }
+            to { transform: rotateY(0deg) translateZ(110px) scale(1.1); }
         }
 
         /* Calligraphic title with premium styling */
@@ -227,9 +233,9 @@
         }
 
         .main-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 56px;
-            font-weight: 900;
+            font-family: 'Dancing Script', cursive;
+            font-size: 72px;
+            font-weight: 700;
             background: linear-gradient(135deg, 
                 #FFD700 0%, 
                 #FF1493 25%, 
@@ -240,11 +246,23 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             margin-bottom: 10px;
             animation: shimmer 3s ease-in-out infinite;
             filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.5));
-            text-transform: uppercase;
+            text-transform: none;
+            position: relative;
+        }
+
+        .main-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
         }
 
         @keyframes shimmer {
@@ -254,13 +272,14 @@
         }
 
         .subtitle {
-            font-family: 'Bebas Neue', cursive;
+            font-family: 'Playfair Display', serif;
             color: rgba(255, 255, 255, 0.9);
-            font-size: 24px;
-            letter-spacing: 6px;
+            font-size: 28px;
+            letter-spacing: 4px;
             text-transform: uppercase;
             font-weight: 400;
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin-top: 15px;
         }
 
         /* Premium glassmorphism card with curves */
@@ -434,6 +453,8 @@
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.3),
                 inset 0 0 30px rgba(255, 215, 0, 0.05);
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
 
         .result-header {
@@ -488,6 +509,7 @@
             text-align: center;
             border: 1px solid rgba(255, 215, 0, 0.3);
             box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1);
+            transform: translateZ(20px);
         }
 
         .stats-number {
@@ -524,13 +546,14 @@
             align-items: center;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform-style: preserve-3d;
         }
 
         .room-item:hover {
             background: linear-gradient(135deg, 
                 rgba(255, 215, 0, 0.1) 0%, 
                 rgba(255, 20, 147, 0.1) 100%);
-            transform: translateX(10px) scale(1.02);
+            transform: translateX(10px) translateZ(10px) scale(1.02);
             box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
         }
 
@@ -619,9 +642,52 @@
             20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
 
+        /* Enhanced 3D floating elements */
+        .floating-element {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,0.3), transparent);
+            filter: blur(20px);
+            animation: float 15s infinite ease-in-out;
+            z-index: -1;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            width: 150px;
+            height: 150px;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 10%;
+            animation-delay: 3s;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(255,20,147,0.3), transparent);
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 6s;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(0,206,209,0.3), transparent);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
         @media (max-width: 480px) {
             .main-title {
-                font-size: 42px;
+                font-size: 52px;
             }
             
             .glass-card {
@@ -639,10 +705,45 @@
                 gap: 20px;
                 align-items: flex-start;
             }
+            
+            .logo-3d {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .sphere-face {
+                width: 150px;
+                height: 150px;
+                font-size: 20px;
+            }
+            
+            .sphere-face:nth-child(1) { 
+                transform: rotateY(0deg) translateZ(75px);
+            }
+            .sphere-face:nth-child(2) { 
+                transform: rotateY(60deg) translateZ(75px);
+            }
+            .sphere-face:nth-child(3) { 
+                transform: rotateY(120deg) translateZ(75px);
+            }
+            .sphere-face:nth-child(4) { 
+                transform: rotateY(180deg) translateZ(75px);
+            }
+            .sphere-face:nth-child(5) { 
+                transform: rotateY(240deg) translateZ(75px);
+            }
+            .sphere-face:nth-child(6) { 
+                transform: rotateY(300deg) translateZ(75px);
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Enhanced 3D floating elements -->
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    
     <!-- Premium Particles Background -->
     <div class="particles" id="particlesContainer"></div>
 
@@ -675,7 +776,7 @@
                         type="text" 
                         class="search-input" 
                         id="techfestId" 
-                        placeholder="Enter your Techfest ID..."
+                        placeholder="Enter your Techfest ID (e.g., 24EA389)..."
                         onkeypress="if(event.key === 'Enter') searchAllocation()"
                     >
                 </div>
@@ -736,9 +837,23 @@
         // Automatically load Excel data from backend
         async function loadExcelFromBackend() {
             try {
-                // Fetch the Excel file from your backend
-                // Replace this URL with your actual backend endpoint
-                const response = await fetch('testin_web.xlsx');
+                // Try different possible file names
+                const fileNames = ['testing_web.xlsx', 'testing_web.dex', 'testin_web.xlsx'];
+                let response = null;
+                
+                for (const fileName of fileNames) {
+                    try {
+                        response = await fetch(fileName);
+                        if (response.ok) break;
+                    } catch (e) {
+                        console.log(`File ${fileName} not found, trying next...`);
+                    }
+                }
+                
+                if (!response || !response.ok) {
+                    throw new Error('Excel file not found');
+                }
+                
                 const arrayBuffer = await response.arrayBuffer();
                 const data = new Uint8Array(arrayBuffer);
                 const workbook = XLSX.read(data, {type: 'array'});
@@ -747,10 +862,10 @@
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
                 
-                // Convert to JSON
+                // Convert to JSON with header: 1 to get array of arrays
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
                 
-                // Process the data
+                // Process the data with more flexible column detection
                 processExcelData(jsonData);
                 console.log('Excel data loaded successfully from backend');
             } catch (error) {
@@ -760,21 +875,61 @@
             }
         }
 
-        // Process Excel data into searchable format
+        // More robust Excel data processing
         function processExcelData(data) {
             excelData = {};
             
-            // Skip header row and process data
-            for (let i = 1; i < data.length; i++) {
+            if (!data || data.length === 0) {
+                console.error('Excel data is empty');
+                createSampleData();
+                return;
+            }
+            
+            // Find header row and map columns
+            let headerRow = 0;
+            let hostelTypeCol = -1, hostelNameCol = -1, roomNoCol = -1, passwordCol = -1, idCol = -1;
+            
+            // Try to find the header row
+            for (let i = 0; i < Math.min(5, data.length); i++) {
                 const row = data[i];
-                if (row && row.length > 0) {
-                    const hostelType = row[0]; // 'Boys' or 'Girls'
-                    const hostelName = row[1]; // 'HostelA', 'HostelB'
-                    const roomNo = row[2]; // '101', '201'
-                    const lockPassword = row[7]; // '1234', '5678'
-                    const allocatedId = row[8]; // Techfest ID
+                if (Array.isArray(row)) {
+                    for (let j = 0; j < row.length; j++) {
+                        const cell = String(row[j]).toLowerCase();
+                        if (cell.includes('hostel') && cell.includes('type')) hostelTypeCol = j;
+                        if (cell.includes('hostel') && cell.includes('name')) hostelNameCol = j;
+                        if (cell.includes('room') || cell.includes('room no')) roomNoCol = j;
+                        if (cell.includes('password') || cell.includes('lock')) passwordCol = j;
+                        if (cell.includes('techfest') || cell.includes('id') || cell.includes('allocated')) idCol = j;
+                    }
                     
-                    if (allocatedId) {
+                    // If we found at least 3 columns, assume this is the header
+                    if ([hostelTypeCol, hostelNameCol, roomNoCol, idCol].filter(col => col !== -1).length >= 3) {
+                        headerRow = i;
+                        break;
+                    }
+                }
+            }
+            
+            // If we couldn't find specific columns, use default indices
+            if (hostelTypeCol === -1) hostelTypeCol = 0;
+            if (hostelNameCol === -1) hostelNameCol = 1;
+            if (roomNoCol === -1) roomNoCol = 2;
+            if (passwordCol === -1) passwordCol = 7;
+            if (idCol === -1) idCol = 9;
+            
+            console.log('Detected columns:', {hostelTypeCol, hostelNameCol, roomNoCol, passwordCol, idCol});
+            
+            // Process data rows (skip header)
+            for (let i = headerRow + 1; i < data.length; i++) {
+                const row = data[i];
+                if (row && Array.isArray(row) && row.length > Math.max(hostelTypeCol, hostelNameCol, roomNoCol, passwordCol, idCol)) {
+                    const hostelType = String(row[hostelTypeCol] || '').trim();
+                    const hostelName = String(row[hostelNameCol] || '').trim();
+                    const roomNo = String(row[roomNoCol] || '').trim();
+                    const lockPassword = String(row[passwordCol] || '').trim();
+                    const allocatedId = String(row[idCol] || '').trim().toUpperCase();
+                    
+                    if (allocatedId && allocatedId !== 'NULL' && allocatedId !== 'N/A' && allocatedId !== '') {
                         if (!excelData[allocatedId]) {
                             excelData[allocatedId] = {
                                 boys: [],
@@ -788,22 +943,30 @@
                             password: lockPassword
                         };
                         
-                        if (hostelType === 'Boys') {
+                        // Determine gender based on hostel type or name
+                        const hostelTypeLower = hostelType.toLowerCase();
+                        if (hostelTypeLower.includes('boy') || hostelTypeLower.includes('male') || 
+                            (hostelName.toLowerCase().includes('boy') || hostelName.toLowerCase().includes('male'))) {
                             excelData[allocatedId].boys.push(allocation);
-                        } else if (hostelType === 'Girls') {
+                        } else if (hostelTypeLower.includes('girl') || hostelTypeLower.includes('female') || 
+                                  (hostelName.toLowerCase().includes('girl') || hostelName.toLowerCase().includes('female'))) {
                             excelData[allocatedId].girls.push(allocation);
+                        } else {
+                            // Default to boys if cannot determine
+                            excelData[allocatedId].boys.push(allocation);
                         }
                     }
                 }
             }
             
             console.log('Processed Excel Data:', excelData);
+            console.log('Available IDs:', Object.keys(excelData));
         }
 
-        // Create sample data for demo purposes
+        // Create sample data for demo purposes including the ID from your screenshot
         function createSampleData() {
             excelData = {
-                'TF2025001': {
+                '24EA389': {
                     boys: [
                         { hostel: 'HostelA', room: '101', password: '1234' },
                         { hostel: 'HostelA', room: '102', password: '5678' }
@@ -830,7 +993,7 @@
 
         // Main search function
         function searchAllocation() {
-            const techfestId = document.getElementById('techfestId').value.trim();
+            const techfestId = document.getElementById('techfestId').value.trim().toUpperCase();
             const loadingSpinner = document.getElementById('loadingSpinner');
             const errorMessage = document.getElementById('errorMessage');
             const resultsContainer = document.getElementById('resultsContainer');
@@ -862,7 +1025,7 @@
                     return;
                 }
                 
-                // Search for the ID in our data
+                // Search for the ID in our data (case insensitive)
                 const allocation = excelData[techfestId];
                 
                 if (allocation) {
@@ -889,7 +1052,7 @@
                                         <span class="person-tag">BOYS</span>
                                         <span class="room-number">${room.hostel} - Room ${room.room}</span>
                                     </div>
-                                    <div class="password-badge">${room.password}</div>
+                                    <div class="password-badge">${room.password || 'N/A'}</div>
                                 </div>
                             `;
                         });
@@ -905,18 +1068,24 @@
                                         <span class="person-tag">GIRLS</span>
                                         <span class="room-number">${room.hostel} - Room ${room.room}</span>
                                     </div>
-                                    <div class="password-badge">${room.password}</div>
+                                    <div class="password-badge">${room.password || 'N/A'}</div>
                                 </div>
                             `;
                         });
+                    }
+                    
+                    if (totalAccommodations === 0) {
+                        html = '<p style="color: rgba(255,255,255,0.7); text-align: center; font-style: italic;">No room allocations found for this ID.</p>';
                     }
                     
                     allocationsContent.innerHTML = html;
                     resultsContainer.classList.add('show');
                 } else {
                     showError(`No allocation found for Techfest ID: ${techfestId}`);
+                    // Show available IDs for debugging
+                    console.log('Available IDs:', Object.keys(excelData));
                 }
-            }, 1500); // Simulate network delay
+            }, 1000);
         }
 
         // Helper function to show error messages
