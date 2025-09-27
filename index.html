@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Techfest Hospitality Allocation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #4a5a94 0%, #f4844e 100%);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%); }
+            100% { transform: translateX(100%) translateY(100%); }
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-text {
+            color: white;
+            margin-top: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            margin-top: 5px;
+            letter-spacing: 2px;
+        }
+
+        .search-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-label {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: white;
+            padding: 0 5px;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .search-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .results-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results-card.show {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .result-title {
+            font-size: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .techfest-id {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .summary-text {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .room-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .room-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .room-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .room-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .room-details {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .room-number {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .room-password {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        .person-label {
+            font-size: 14px;
+            color: #777;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background: #ff4757;
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f0f0f0;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .search-card {
+                padding: 30px 20px;
+            }
+            
+            .room-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .room-details {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated particles background -->
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <!-- Logo Section -->
+        <div class="logo-container">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Building icon -->
+                    <rect x="35" y="30" width="30" height="50" fill="white" opacity="0.9"/>
+                    <rect x="40" y="35" width="8" height="8" fill="#667eea"/>
+                    <rect x="52" y="35" width="8" height="8" fill="#667eea"/>
+                    <rect x="40" y="47" width="8" height="8" fill="#667eea"/>
+                    <rect x="52" y="47" width="8" height="8" fill="#667eea"/>
+                    <rect x="45" y="65" width="10" height="15" fill="#667eea"/>
+                    
+                    <!-- Arrow -->
+                    <path d="M25 25 L25 50 Q25 60 35 60 L40 60" stroke="white" stroke-width="3" fill="none"/>
+                    <path d="M20 30 L25 25 L30 30" stroke="white" stroke-width="3" fill="none"/>
+                    
+                    <!-- WiFi symbol -->
+                    <circle cx="50" cy="58" r="2" fill="white"/>
+                    <path d="M45 54 Q50 50 55 54" stroke="white" stroke-width="2" fill="none"/>
+                    <path d="M42 51 Q50 46 58 51" stroke="white" stroke-width="2" fill="none" opacity="0.7"/>
+                </svg>
+            </div>
+            <div class="logo-text">TECHFEST</div>
+            <div class="subtitle">HOSPITALITY ALLOCATE</div>
+        </div>
+
+        <!-- Search Card -->
+        <div class="search-card">
+            <h2 class="form-title">Check Your Room Allocation</h2>
+            
+            <div class="input-group">
+                <label class="input-label">Techfest ID</label>
+                <input 
+                    type="text" 
+                    class="input-field" 
+                    id="techfestId" 
+                    placeholder="Enter your Techfest ID"
+                    onkeypress="if(event.key === 'Enter') searchAllocation()"
+                >
+            </div>
+            
+            <button class="search-btn" onclick="searchAllocation()">
+                Search Allocation
+            </button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage">
+            No allocation found for this Techfest ID. Please check your ID and try again.
+        </div>
+
+        <!-- Results Card -->
+        <div class="results-card" id="resultsCard">
+            <div class="result-header">
+                <div class="result-title">Allocation Details</div>
+                <div class="techfest-id" id="displayId">TF2024001</div>
+            </div>
+            
+            <div class="summary-box">
+                <div class="summary-text" id="summaryText">
+                    Total Accommodation: 3 (2 Boys, 1 Girl)
+                </div>
+            </div>
+            
+            <div id="allocationsContainer">
+                <!-- Allocations will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Sample data structure - Replace with actual Excel data
+        const accommodationData = {
+            'TF2024001': {
+                boys: [
+                    { room: '101', password: '1234' },
+                    { room: '101', password: '1234' }
+                ],
+                girls: [
+                    { room: '201', password: '5678' }
+                ]
+            },
+            'TF2024002': {
+                boys: [
+                    { room: '102', password: '2345' }
+                ],
+                girls: []
+            },
+            'TF2024003': {
+                boys: [],
+                girls: [
+                    { room: '202', password: '6789' },
+                    { room: '203', password: '7890' }
+                ]
+            }
+        };
+
+        function searchAllocation() {
+            const techfestId = document.getElementById('techfestId').value.trim();
+            
+            if (!techfestId) {
+                showError('Please enter a Techfest ID');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('resultsCard').classList.remove('show');
+            document.getElementById('errorMessage').classList.remove('show');
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                document.getElementById('loading').classList.remove('show');
+                
+                // Check if ID exists in data
+                if (accommodationData[techfestId]) {
+                    displayResults(techfestId, accommodationData[techfestId]);
+                } else {
+                    showError('No allocation found for this Techfest ID. Please check your ID and try again.');
+                }
+            }, 1000);
+        }
+        
+        function displayResults(techfestId, data) {
+            const boysCount = data.boys.length;
+            const girlsCount = data.girls.length;
+            const totalCount = boysCount + girlsCount;
+            
+            // Update summary
+            document.getElementById('displayId').textContent = techfestId;
+            
+            let summaryText = `Total Accommodation: ${totalCount}`;
+            if (totalCount > 0) {
+                const parts = [];
+                if (boysCount > 0) parts.push(`${boysCount} Boy${boysCount > 1 ? 's' : ''}`);
+                if (girlsCount > 0) parts.push(`${girlsCount} Girl${girlsCount > 1 ? 's' : ''}`);
+                summaryText += ` (${parts.join(', ')})`;
+            }
+            document.getElementById('summaryText').textContent = summaryText;
+            
+            // Build allocations HTML
+            let allocationsHTML = '';
+            
+            // Boys section
+            if (boysCount > 0) {
+                allocationsHTML += '<div class="room-section">';
+                allocationsHTML += '<div class="section-title">Boys Accommodation</div>';
+                data.boys.forEach((boy, index) => {
+                    allocationsHTML += `
+                        <div class="room-card">
+                            <div class="room-info">
+                                <div class="room-details">
+                                    <span class="person-label">Boy ${index + 1}</span>
+                                    <span class="room-number">Room: ${boy.room}</span>
+                                </div>
+                                <span class="room-password">PIN: ${boy.password}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                allocationsHTML += '</div>';
+            }
+            
+            // Girls section
+            if (girlsCount > 0) {
+                allocationsHTML += '<div class="room-section">';
+                allocationsHTML += '<div class="section-title">Girls Accommodation</div>';
+                data.girls.forEach((girl, index) => {
+                    allocationsHTML += `
+                        <div class="room-card">
+                            <div class="room-info">
+                                <div class="room-details">
+                                    <span class="person-label">Girl ${index + 1}</span>
+                                    <span class="room-number">Room: ${girl.room}</span>
+                                </div>
+                                <span class="room-password">PIN: ${girl.password}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                allocationsHTML += '</div>';
+            }
+            
+            document.getElementById('allocationsContainer').innerHTML = allocationsHTML;
+            document.getElementById('resultsCard').classList.add('show');
+        }
+        
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+            setTimeout(() => {
+                errorElement.classList.remove('show');
+            }, 5000);
+        }
+
+        // Add example hint
+        document.getElementById('techfestId').addEventListener('focus', function() {
+            this.placeholder = 'e.g., TF2024001';
+        });
+        
+        document.getElementById('techfestId').addEventListener('blur', function() {
+            this.placeholder = 'Enter your Techfest ID';
+        });
+    </script>
+</body>
+</html>
