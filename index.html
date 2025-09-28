@@ -1192,11 +1192,9 @@
                     const allocatedId = String(row[allocatedIdCol] || '').trim().toUpperCase();
                     
                     if (allocatedId && allocatedId !== 'NULL' && allocatedId !== 'N/A' && allocatedId !== '') {
+                        // Create array for this ID if it doesn't exist
                         if (!excelData[allocatedId]) {
-                            excelData[allocatedId] = {
-                                boys: [],
-                                girls: []
-                            };
+                            excelData[allocatedId] = [];
                         }
                         
                         const allocation = {
@@ -1210,23 +1208,8 @@
                             password: lockPassword
                         };
                         
-                        // Determine gender based on hostel type
-                        const hostelTypeLower = hostelType.toLowerCase();
-                        if (hostelTypeLower.includes('boy') || hostelTypeLower.includes('male')) {
-                            excelData[allocatedId].boys.push(allocation);
-                        } else if (hostelTypeLower.includes('girl') || hostelTypeLower.includes('female')) {
-                            excelData[allocatedId].girls.push(allocation);
-                        } else {
-                            // Default based on common patterns
-                            if (hostelName.toLowerCase().includes('boy') || hostelName.toLowerCase().includes('male')) {
-                                excelData[allocatedId].boys.push(allocation);
-                            } else if (hostelName.toLowerCase().includes('girl') || hostelName.toLowerCase().includes('female')) {
-                                excelData[allocatedId].girls.push(allocation);
-                            } else {
-                                // Default to boys if cannot determine
-                                excelData[allocatedId].boys.push(allocation);
-                            }
-                        }
+                        // Add this allocation to the ID's array
+                        excelData[allocatedId].push(allocation);
                     }
                 }
             }
@@ -1235,140 +1218,109 @@
             console.log('Available IDs:', Object.keys(excelData));
         }
 
-        // Create sample data with multiple people per ID
+        // Create sample data with multiple people per ID appearing in different rows
         function createSampleData() {
             excelData = {
-                '24B3842': {
-                    boys: [
-                        { 
-                            hostelType: 'Boys Hostel', 
-                            hostelName: 'B', 
-                            room: '306', 
-                            maxOccupancy: '4',
-                            currentOccupancy: '1',
-                            underMaintenance: false,
-                            isClean: true,
-                            password: '9880' 
-                        },
-                        { 
-                            hostelType: 'Boys Hostel', 
-                            hostelName: 'B', 
-                            room: '307', 
-                            maxOccupancy: '4',
-                            currentOccupancy: '1',
-                            underMaintenance: false,
-                            isClean: true,
-                            password: '9881' 
-                        },
-                        { 
-                            hostelType: 'Boys Hostel', 
-                            hostelName: 'C', 
-                            room: '208', 
-                            maxOccupancy: '2',
-                            currentOccupancy: '1',
-                            underMaintenance: false,
-                            isClean: true,
-                            password: '7423' 
-                        },
-                        { 
-                            hostelType: 'Boys Hostel', 
-                            hostelName: 'A', 
-                            room: '105', 
-                            maxOccupancy: '3',
-                            currentOccupancy: '1',
-                            underMaintenance: false,
-                            isClean: true,
-                            password: '6354' 
-                        }
-                    ],
-                    girls: [
-                        { 
-                            hostelType: 'Girls Hostel', 
-                            hostelName: 'B', 
-                            room: '206', 
-                            maxOccupancy: '2',
-                            currentOccupancy: '1',
-                            underMaintenance: false,
-                            isClean: true,
-                            password: '5683' 
-                        },
-                        { 
-                            hostelType: 'Girls Hostel', 
-                            hostelName: 'C', 
-                            room: '305', 
-                            maxOccupancy: '4',
-                            currentOccupancy: '1',
-                            underMaintenance: false,
-                            isClean: true,
-                            password: '7421' 
-                        }
-                    ]
-                },
-                '24B1797': {
-                    boys: [
-                        { 
-                            hostelType: 'Boys Hostel', 
-                            hostelName: 'B', 
-                            room: '306', 
-                            maxOccupancy: '4',
-                            currentOccupancy: '1',
-                            underMaintenance: false,
-                            isClean: true,
-                            password: '9880' 
-                        }
-                    ],
-                    girls: []
-                },
-                '24B5842': {
-                    boys: [],
-                    girls: [
-                        { 
-                            hostelType: 'Girls Hostel', 
-                            hostelName: 'B', 
-                            room: '206', 
-                            maxOccupancy: '2',
-                            currentOccupancy: '1',
-                            underMaintenance: false,
-                            isClean: true,
-                            password: '5683' 
-                        },
-                        { 
-                            hostelType: 'Girls Hostel', 
-                            hostelName: 'C', 
-                            room: '305', 
-                            maxOccupancy: '4',
-                            currentOccupancy: '1',
-                            underMaintenance: false,
-                            isClean: true,
-                            password: '7421' 
-                        },
-                        { 
-                            hostelType: 'Girls Hostel', 
-                            hostelName: 'A', 
-                            room: '102', 
-                            maxOccupancy: '2',
-                            currentOccupancy: '1',
-                            underMaintenance: false,
-                            isClean: true,
-                            password: '9156' 
-                        }
-                    ]
-                },
-                '24A4566': {
-                    boys: [
-                        { 
-                            hostelType: 'Boys Hostel', 
-                            hostelName: '2015 A', 
-                            room: '101', 
-                            maxOccupancy: '2',
-                            currentOccupancy: '1',
-                            underMaintenance: false,
-                            isClean: true,
-                            password: '12:38' 
-                        }
-                    ],
-                    girls: []
-                }
+                '24B3842': [
+                    // First row - 3 people in the same room
+                    { 
+                        hostelType: 'Boys Hostel', 
+                        hostelName: 'B', 
+                        room: '306', 
+                        maxOccupancy: '4',
+                        currentOccupancy: '3',
+                        underMaintenance: false,
+                        isClean: true,
+                        password: '9880' 
+                    },
+                    { 
+                        hostelType: 'Boys Hostel', 
+                        hostelName: 'B', 
+                        room: '306', 
+                        maxOccupancy: '4',
+                        currentOccupancy: '3',
+                        underMaintenance: false,
+                        isClean: true,
+                        password: '9880' 
+                    },
+                    { 
+                        hostelType: 'Boys Hostel', 
+                        hostelName: 'B', 
+                        room: '306', 
+                        maxOccupancy: '4',
+                        currentOccupancy: '3',
+                        underMaintenance: false,
+                        isClean: true,
+                        password: '9880' 
+                    },
+                    // Second row - 1 person in a different room
+                    { 
+                        hostelType: 'Boys Hostel', 
+                        hostelName: 'C', 
+                        room: '208', 
+                        maxOccupancy: '2',
+                        currentOccupancy: '1',
+                        underMaintenance: false,
+                        isClean: true,
+                        password: '7423' 
+                    }
+                ],
+                '24B1797': [
+                    { 
+                        hostelType: 'Boys Hostel', 
+                        hostelName: 'B', 
+                        room: '306', 
+                        maxOccupancy: '4',
+                        currentOccupancy: '1',
+                        underMaintenance: false,
+                        isClean: true,
+                        password: '9880' 
+                    }
+                ],
+                '24B5842': [
+                    { 
+                        hostelType: 'Girls Hostel', 
+                        hostelName: 'B', 
+                        room: '206', 
+                        maxOccupancy: '2',
+                        currentOccupancy: '1',
+                        underMaintenance: false,
+                        isClean: true,
+                        password: '5683' 
+                    },
+                    { 
+                        hostelType: 'Girls Hostel', 
+                        hostelName: 'C', 
+                        room: '305', 
+                        maxOccupancy: '4',
+                        currentOccupancy: '1',
+                        underMaintenance: false,
+                        isClean: true,
+                        password: '7421' 
+                    },
+                    { 
+                        hostelType: 'Girls Hostel', 
+                        hostelName: 'A', 
+                        room: '102', 
+                        maxOccupancy: '2',
+                        currentOccupancy: '1',
+                        underMaintenance: false,
+                        isClean: true,
+                        password: '9156' 
+                    }
+                ],
+                '24A4566': [
+                    { 
+                        hostelType: 'Boys Hostel', 
+                        hostelName: '2015 A', 
+                        room: '101', 
+                        maxOccupancy: '2',
+                        currentOccupancy: '1',
+                        underMaintenance: false,
+                        isClean: true,
+                        password: '12:38' 
+                    }
+                ]
             };
             console.log('Sample data created:', excelData);
         }
@@ -1438,6 +1390,19 @@
             return grouped;
         }
 
+        // Helper function to determine gender from hostel type
+        function getGenderFromHostelType(hostelType) {
+            const type = hostelType.toLowerCase();
+            if (type.includes('boy') || type.includes('male')) {
+                return 'Boy';
+            } else if (type.includes('girl') || type.includes('female')) {
+                return 'Girl';
+            } else {
+                // Default to Boy if cannot determine
+                return 'Boy';
+            }
+        }
+
         // Main search function
         function searchAllocation() {
             const techfestIdInput = document.getElementById('techfestId').value.trim().toUpperCase();
@@ -1483,17 +1448,47 @@
                 }
                 
                 // Search for all IDs in our data
-                let combinedAllocation = {
-                    boys: [],
-                    girls: []
-                };
                 let foundIds = [];
+                let totalAllocations = 0;
                 
+                // Build allocations HTML with correct data mapping
+                let html = '';
+                
+                // Display allocations by ID
                 techfestIds.forEach(id => {
-                    if (excelData[id]) {
+                    const idAllocations = excelData[id];
+                    
+                    if (idAllocations && idAllocations.length > 0) {
                         foundIds.push(id);
-                        combinedAllocation.boys.push(...excelData[id].boys);
-                        combinedAllocation.girls.push(...excelData[id].girls);
+                        totalAllocations += idAllocations.length;
+                        
+                        html += `<div class="id-section-title">Techfest ID: ${id} (${idAllocations.length} Accommodations)</div>`;
+                        
+                        // Group allocations by room
+                        const allocationsByRoom = groupByRoom(idAllocations);
+                        
+                        // Process each room group
+                        Object.keys(allocationsByRoom).forEach(roomKey => {
+                            const roomGroup = allocationsByRoom[roomKey];
+                            const gender = getGenderFromHostelType(roomGroup.hostelType);
+                            
+                            html += `
+                                <div class="room-group">
+                                    <div class="room-group-header">
+                                        <div class="room-group-title">${roomGroup.hostelName} - Room ${roomGroup.room}</div>
+                                        <div class="person-count">${roomGroup.people.length} Person(s)</div>
+                                    </div>
+                            `;
+                            
+                            // Display each person in this room
+                            roomGroup.people.forEach((person, index) => {
+                                html += generatePersonCard(person, index + 1, gender);
+                            });
+                            
+                            html += `</div>`;
+                        });
+                        
+                        html += '<div style="margin: 20px 0; border-bottom: 1px solid rgba(255,215,0,0.2);"></div>';
                     }
                 });
                 
@@ -1501,80 +1496,8 @@
                     // Display results
                     displayId.textContent = foundIds.join(', ');
                     
-                    const totalBoys = combinedAllocation.boys.length;
-                    const totalGirls = combinedAllocation.girls.length;
-                    const totalAccommodations = totalBoys + totalGirls;
-                    
-                    totalCount.textContent = totalAccommodations;
-                    statsText.textContent = `Total Accommodations (${totalBoys} Boys, ${totalGirls} Girls) - ${foundIds.length} ID(s) Found`;
-                    
-                    // Build allocations HTML with correct data mapping
-                    let html = '';
-                    
-                    // Display allocations by ID
-                    foundIds.forEach(id => {
-                        const idAllocation = excelData[id];
-                        const idBoys = idAllocation.boys.length;
-                        const idGirls = idAllocation.girls.length;
-                        
-                        if (idBoys > 0 || idGirls > 0) {
-                            html += `<div class="id-section-title">Techfest ID: ${id}</div>`;
-                            
-                            // Boys accommodations for this ID
-                            if (idBoys > 0) {
-                                html += `<div class="accommodation-title">Boys Accommodations (${idBoys} Persons)</div>`;
-                                
-                                // Group boys by room
-                                const boysByRoom = groupByRoom(idAllocation.boys);
-                                
-                                Object.keys(boysByRoom).forEach(roomKey => {
-                                    const roomGroup = boysByRoom[roomKey];
-                                    html += `
-                                        <div class="room-group">
-                                            <div class="room-group-header">
-                                                <div class="room-group-title">${roomGroup.hostelName} - Room ${roomGroup.room}</div>
-                                                <div class="person-count">${roomGroup.people.length} Person(s)</div>
-                                            </div>
-                                    `;
-                                    
-                                    // Display each person in this room
-                                    roomGroup.people.forEach((person, index) => {
-                                        html += generatePersonCard(person, index + 1, 'Boy');
-                                    });
-                                    
-                                    html += `</div>`;
-                                });
-                            }
-                            
-                            // Girls accommodations for this ID
-                            if (idGirls > 0) {
-                                html += `<div class="accommodation-title">Girls Accommodations (${idGirls} Persons)</div>`;
-                                
-                                // Group girls by room
-                                const girlsByRoom = groupByRoom(idAllocation.girls);
-                                
-                                Object.keys(girlsByRoom).forEach(roomKey => {
-                                    const roomGroup = girlsByRoom[roomKey];
-                                    html += `
-                                        <div class="room-group">
-                                            <div class="room-group-header">
-                                                <div class="room-group-title">${roomGroup.hostelName} - Room ${roomGroup.room}</div>
-                                                <div class="person-count">${roomGroup.people.length} Person(s)</div>
-                                            </div>
-                                    `;
-                                    
-                                    // Display each person in this room
-                                    roomGroup.people.forEach((person, index) => {
-                                        html += generatePersonCard(person, index + 1, 'Girl');
-                                    });
-                                    
-                                    html += `</div>`;
-                                });
-                            }
-                            
-                            html += '<div style="margin: 20px 0; border-bottom: 1px solid rgba(255,215,0,0.2);"></div>';
-                        }
-                    });
+                    totalCount.textContent = totalAllocations;
+                    statsText.textContent = `Total Accommodations - ${foundIds.length} ID(s) Found`;
                     
                     if (html === '') {
                         html = '<p style="color: rgba(255,255,255,0.7); text-align: center; font-style: italic; padding: 40px;">No room allocations found for the provided IDs.</p>';
