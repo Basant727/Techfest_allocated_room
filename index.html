@@ -1242,19 +1242,6 @@
             `;
         }
 
-        // Groups allocations by room for display purposes
-        function groupByRoom(allocations) {
-            const grouped = {};
-            allocations.forEach(allocation => {
-                const key = `${allocation.hostelName}-${allocation.room}`;
-                if (!grouped[key]) {
-                    grouped[key] = { ...allocation, peopleCount: 0 };
-                }
-                grouped[key].peopleCount++;
-            });
-            return grouped;
-        }
-
         // Determines gender from the hostel_type string
         function getGenderFromHostelType(hostelType) {
             const type = hostelType.toLowerCase();
@@ -1311,18 +1298,22 @@
                 let foundIds = [];
                 let totalAllocationsCount = 0;
                 let html = '';
+                let totalBoys = 0;
+                let totalGirls = 0;
                 
                 techfestIds.forEach(id => {
                     const idAllocations = excelData[id];
                     
                     if (idAllocations && idAllocations.length > 0) {
                         if (!foundIds.includes(id)) foundIds.push(id);
-                        totalAllocationsCount += idAllocations.length;
-                        
-                        html += `<div class="id-section-title">Techfest ID: ${id}</div>`;
                         
                         const boysAllocations = idAllocations.filter(a => getGenderFromHostelType(a.hostelType) === 'Boy');
                         const girlsAllocations = idAllocations.filter(a => getGenderFromHostelType(a.hostelType) === 'Girl');
+                        
+                        totalBoys += boysAllocations.length;
+                        totalGirls += girlsAllocations.length;
+                        
+                        html += `<div class="id-section-title">Techfest ID: ${id}</div>`;
                         
                         if (boysAllocations.length > 0) {
                             html += generateGenderSectionHtml(boysAllocations, 'Boy');
@@ -1335,6 +1326,8 @@
                     }
                 });
                 
+                totalAllocationsCount = totalBoys + totalGirls;
+
                 if (html.endsWith('<hr style="border-color: rgba(255,215,0,0.2); margin: 40px 0;">')) {
                     html = html.slice(0, -68);
                 }
@@ -1342,7 +1335,23 @@
                 if (foundIds.length > 0) {
                     displayId.textContent = foundIds.join(', ');
                     totalCount.textContent = totalAllocationsCount;
-                    statsText.textContent = `Total Allocations for ${foundIds.length} ID(s)`;
+                    
+                    // --- NEW DYNAMIC SUMMARY TEXT LOGIC ---
+                    const summaryParts = [];
+                    if (totalBoys > 0) {
+                        summaryParts.push(`${totalBoys} Boy${totalBoys > 1 ? 's' : ''}`);
+                    }
+                    if (totalGirls > 0) {
+                        summaryParts.push(`${totalGirls} Girl${totalGirls > 1 ? 's' : ''}`);
+                    }
+                    
+                    if (summaryParts.length > 0) {
+                        statsText.textContent = `Allocated to ${summaryParts.join(' and ')}`;
+                    } else {
+                        statsText.textContent = "Accommodation Details"; // Sensible default
+                    }
+                    // --- END NEW LOGIC ---
+
                     allocationsContent.innerHTML = html;
                     resultsContainer.classList.add('show');
                 } else {
@@ -1364,3 +1373,4 @@
     </script>
 </body>
 </html>
+
