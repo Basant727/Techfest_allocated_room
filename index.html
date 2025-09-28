@@ -539,7 +539,7 @@
                 rgba(255, 255, 255, 0.05) 100%);
             border-radius: 20px;
             padding: 25px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             border: 2px solid transparent;
             background-clip: padding-box;
             border-image: linear-gradient(135deg, #FFD700, #FF1493, #00CED1) 1;
@@ -598,7 +598,7 @@
         .room-details-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            gap: 15px;
             margin-bottom: 20px;
         }
 
@@ -611,11 +611,13 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .detail-item:hover {
             background: rgba(255, 215, 0, 0.1);
             transform: translateY(-3px);
+            border-color: rgba(255, 215, 0, 0.3);
         }
 
         .detail-label {
@@ -623,8 +625,9 @@
             color: #FFD700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-family: 'Bebas Neue', cursive;
+            font-weight: 600;
         }
 
         .detail-value {
@@ -632,6 +635,7 @@
             font-weight: 700;
             color: white;
             font-family: 'Montserrat', sans-serif;
+            word-break: break-word;
         }
 
         .password-section {
@@ -652,20 +656,22 @@
             letter-spacing: 2px;
             margin-bottom: 10px;
             font-family: 'Bebas Neue', cursive;
+            font-weight: 600;
         }
 
         .password-value {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
             color: white;
             font-family: 'Courier New', monospace;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             background: rgba(0, 0, 0, 0.3);
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 10px;
             border: 2px solid rgba(255, 215, 0, 0.5);
             display: inline-block;
-            min-width: 120px;
+            min-width: 140px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .accommodation-title {
@@ -680,6 +686,9 @@
             left: 50%;
             transform: translateX(-50%);
             padding: 0 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 10px 30px;
         }
 
         .accommodation-title::before,
@@ -792,6 +801,36 @@
             50% { transform: translateY(-20px) rotate(180deg); }
         }
 
+        /* Status indicators */
+        .status-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-clean .status-dot { background: #00ff00; }
+        .status-maintenance .status-dot { background: #ff9900; }
+        .status-occupied .status-dot { background: #ff4444; }
+
         @media (max-width: 768px) {
             .room-details-grid {
                 grid-template-columns: 1fr;
@@ -834,6 +873,46 @@
             .sphere-face:nth-child(6) { 
                 transform: rotateY(300deg) translateZ(75px);
             }
+            
+            .password-value {
+                font-size: 22px;
+                letter-spacing: 3px;
+                padding: 10px 20px;
+            }
+        }
+
+        /* Animation keyframes */
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateX(-30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
     </style>
 </head>
@@ -875,7 +954,7 @@
                         type="text" 
                         class="search-input" 
                         id="techfestId" 
-                        placeholder="Enter your Techfest ID (e.g., 24A4566)..."
+                        placeholder="Enter your Techfest ID (e.g., 24B1797)..."
                         onkeypress="if(event.key === 'Enter') searchAllocation()"
                     >
                 </div>
@@ -964,7 +1043,7 @@
                 // Convert to JSON with header: 1 to get array of arrays
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
                 
-                // Process the data with more flexible column detection
+                // Process the data with correct column mapping
                 processExcelData(jsonData);
                 console.log('Excel data loaded successfully from backend');
             } catch (error) {
@@ -974,7 +1053,7 @@
             }
         }
 
-        // More robust Excel data processing
+        // Correct Excel data processing based on your data structure
         function processExcelData(data) {
             excelData = {};
             
@@ -984,49 +1063,69 @@
                 return;
             }
             
-            // Find header row and map columns
+            // Find header row and map columns correctly
             let headerRow = 0;
-            let hostelTypeCol = -1, hostelNameCol = -1, roomNoCol = -1, passwordCol = -1, idCol = -1;
+            let hostelTypeCol = -1, hostelNameCol = -1, roomNoCol = -1, maxOccupancyCol = -1, 
+                currentOccupancyCol = -1, underMaintenanceCol = -1, isCleanCol = -1, 
+                passwordCol = -1, allocatedIdCol = -1;
             
-            // Try to find the header row
+            // Try to find the header row (first row with column headers)
             for (let i = 0; i < Math.min(5, data.length); i++) {
                 const row = data[i];
                 if (Array.isArray(row)) {
                     for (let j = 0; j < row.length; j++) {
                         const cell = String(row[j]).toLowerCase();
-                        if (cell.includes('hostel') && cell.includes('type')) hostelTypeCol = j;
-                        if (cell.includes('hostel') && cell.includes('name')) hostelNameCol = j;
-                        if (cell.includes('room') || cell.includes('room no')) roomNoCol = j;
-                        if (cell.includes('password') || cell.includes('lock')) passwordCol = j;
-                        if (cell.includes('techfest') || cell.includes('id') || cell.includes('allocated')) idCol = j;
+                        if (cell.includes('hostel_type') || cell.includes('hostel type')) hostelTypeCol = j;
+                        if (cell.includes('hostel_name') || cell.includes('hostel name')) hostelNameCol = j;
+                        if (cell.includes('room_no') || cell.includes('room no')) roomNoCol = j;
+                        if (cell.includes('max_occupancy') || cell.includes('max occupancy')) maxOccupancyCol = j;
+                        if (cell.includes('current_occupancy') || cell.includes('current occupancy')) currentOccupancyCol = j;
+                        if (cell.includes('under_maintainance') || cell.includes('under maintenance')) underMaintenanceCol = j;
+                        if (cell.includes('is_clean') || cell.includes('is clean')) isCleanCol = j;
+                        if (cell.includes('lock_password') || cell.includes('lock password') || cell.includes('password')) passwordCol = j;
+                        if (cell.includes('allocated_to_id') || cell.includes('allocated to') || cell.includes('techfest id')) allocatedIdCol = j;
                     }
                     
-                    // If we found at least 3 columns, assume this is the header
-                    if ([hostelTypeCol, hostelNameCol, roomNoCol, idCol].filter(col => col !== -1).length >= 3) {
+                    // If we found the key columns, assume this is the header
+                    if (hostelTypeCol !== -1 && hostelNameCol !== -1 && roomNoCol !== -1) {
                         headerRow = i;
                         break;
                     }
                 }
             }
             
-            // If we couldn't find specific columns, use default indices
+            // If we couldn't find specific columns, use the exact structure from your data
             if (hostelTypeCol === -1) hostelTypeCol = 0;
             if (hostelNameCol === -1) hostelNameCol = 1;
             if (roomNoCol === -1) roomNoCol = 2;
+            if (maxOccupancyCol === -1) maxOccupancyCol = 3;
+            if (currentOccupancyCol === -1) currentOccupancyCol = 4;
+            if (underMaintenanceCol === -1) underMaintenanceCol = 5;
+            if (isCleanCol === -1) isCleanCol = 6;
             if (passwordCol === -1) passwordCol = 7;
-            if (idCol === -1) idCol = 9;
+            if (allocatedIdCol === -1) allocatedIdCol = 8;
             
-            console.log('Detected columns:', {hostelTypeCol, hostelNameCol, roomNoCol, passwordCol, idCol});
+            console.log('Detected columns:', {
+                hostelTypeCol, hostelNameCol, roomNoCol, maxOccupancyCol, 
+                currentOccupancyCol, underMaintenanceCol, isCleanCol, 
+                passwordCol, allocatedIdCol
+            });
             
             // Process data rows (skip header)
             for (let i = headerRow + 1; i < data.length; i++) {
                 const row = data[i];
-                if (row && Array.isArray(row) && row.length > Math.max(hostelTypeCol, hostelNameCol, roomNoCol, passwordCol, idCol)) {
+                if (row && Array.isArray(row) && row.length > Math.max(
+                    hostelTypeCol, hostelNameCol, roomNoCol, allocatedIdCol
+                )) {
                     const hostelType = String(row[hostelTypeCol] || '').trim();
                     const hostelName = String(row[hostelNameCol] || '').trim();
                     const roomNo = String(row[roomNoCol] || '').trim();
+                    const maxOccupancy = String(row[maxOccupancyCol] || '').trim();
+                    const currentOccupancy = String(row[currentOccupancyCol] || '').trim();
+                    const underMaintenance = String(row[underMaintenanceCol] || '').trim();
+                    const isClean = String(row[isCleanCol] || '').trim();
                     const lockPassword = String(row[passwordCol] || '').trim();
-                    const allocatedId = String(row[idCol] || '').trim().toUpperCase();
+                    const allocatedId = String(row[allocatedIdCol] || '').trim().toUpperCase();
                     
                     if (allocatedId && allocatedId !== 'NULL' && allocatedId !== 'N/A' && allocatedId !== '') {
                         if (!excelData[allocatedId]) {
@@ -1037,22 +1136,32 @@
                         }
                         
                         const allocation = {
-                            hostel: hostelName,
+                            hostelType: hostelType,
+                            hostelName: hostelName,
                             room: roomNo,
+                            maxOccupancy: maxOccupancy,
+                            currentOccupancy: currentOccupancy,
+                            underMaintenance: underMaintenance.toLowerCase() === 'true',
+                            isClean: isClean.toLowerCase() === 'true',
                             password: lockPassword
                         };
                         
-                        // Determine gender based on hostel type or name
+                        // Determine gender based on hostel type
                         const hostelTypeLower = hostelType.toLowerCase();
-                        if (hostelTypeLower.includes('boy') || hostelTypeLower.includes('male') || 
-                            (hostelName.toLowerCase().includes('boy') || hostelName.toLowerCase().includes('male'))) {
+                        if (hostelTypeLower.includes('boy') || hostelTypeLower.includes('male')) {
                             excelData[allocatedId].boys.push(allocation);
-                        } else if (hostelTypeLower.includes('girl') || hostelTypeLower.includes('female') || 
-                                  (hostelName.toLowerCase().includes('girl') || hostelName.toLowerCase().includes('female'))) {
+                        } else if (hostelTypeLower.includes('girl') || hostelTypeLower.includes('female')) {
                             excelData[allocatedId].girls.push(allocation);
                         } else {
-                            // Default to boys if cannot determine
-                            excelData[allocatedId].boys.push(allocation);
+                            // Default based on common patterns
+                            if (hostelName.toLowerCase().includes('boy') || hostelName.toLowerCase().includes('male')) {
+                                excelData[allocatedId].boys.push(allocation);
+                            } else if (hostelName.toLowerCase().includes('girl') || hostelName.toLowerCase().includes('female')) {
+                                excelData[allocatedId].girls.push(allocation);
+                            } else {
+                                // Default to boys if cannot determine
+                                excelData[allocatedId].boys.push(allocation);
+                            }
                         }
                     }
                 }
@@ -1062,28 +1171,38 @@
             console.log('Available IDs:', Object.keys(excelData));
         }
 
-        // Create sample data for demo purposes including the ID from your screenshot
+        // Create sample data based on your actual data structure
         function createSampleData() {
             excelData = {
+                '24B1797': {
+                    boys: [
+                        { 
+                            hostelType: 'Boys Hostel', 
+                            hostelName: 'B', 
+                            room: '306', 
+                            maxOccupancy: '4',
+                            currentOccupancy: '0',
+                            underMaintenance: false,
+                            isClean: true,
+                            password: '9880' 
+                        }
+                    ],
+                    girls: []
+                },
                 '24A4566': {
                     boys: [
-                        { hostel: '2015 A', room: '101', password: '12:38' }
+                        { 
+                            hostelType: 'Boys Hostel', 
+                            hostelName: '2015 A', 
+                            room: '101', 
+                            maxOccupancy: '2',
+                            currentOccupancy: '0',
+                            underMaintenance: false,
+                            isClean: true,
+                            password: '12:38' 
+                        }
                     ],
                     girls: []
-                },
-                '24EA389': {
-                    boys: [
-                        { hostel: 'HostelA', room: '102', password: '5678' }
-                    ],
-                    girls: []
-                },
-                'TF2025003': {
-                    boys: [
-                        { hostel: 'HostelC', room: '301', password: '3456' }
-                    ],
-                    girls: [
-                        { hostel: 'HostelD', room: '401', password: '7890' }
-                    ]
                 }
             };
             console.log('Sample data created:', excelData);
@@ -1137,7 +1256,7 @@
                     totalCount.textContent = totalAccommodations;
                     statsText.textContent = `Total Accommodations (${totalBoys} Boys, ${totalGirls} Girls)`;
                     
-                    // Build allocations HTML with new attractive design
+                    // Build allocations HTML with correct data mapping
                     let html = '';
                     
                     // Boys accommodations
@@ -1147,26 +1266,36 @@
                             html += `
                                 <div class="room-card">
                                     <div class="room-header">
-                                        <div class="room-type">Boys Hostel</div>
+                                        <div class="room-type">${room.hostelType}</div>
                                         <div class="room-icon">🏨</div>
                                     </div>
                                     <div class="room-details-grid">
                                         <div class="detail-item">
                                             <div class="detail-label">Hostel Name</div>
-                                            <div class="detail-value">${room.hostel}</div>
+                                            <div class="detail-value">${room.hostelName}</div>
                                         </div>
                                         <div class="detail-item">
                                             <div class="detail-label">Room Number</div>
                                             <div class="detail-value">${room.room}</div>
                                         </div>
                                         <div class="detail-item">
-                                            <div class="detail-label">Allocation ID</div>
-                                            <div class="detail-value">${techfestId}</div>
+                                            <div class="detail-label">Occupancy</div>
+                                            <div class="detail-value">${room.currentOccupancy}/${room.maxOccupancy}</div>
                                         </div>
                                     </div>
                                     <div class="password-section">
                                         <div class="password-label">Room Password</div>
                                         <div class="password-value">${room.password || 'N/A'}</div>
+                                    </div>
+                                    <div class="status-indicators">
+                                        <div class="status-item ${room.isClean ? 'status-clean' : ''}">
+                                            <div class="status-dot"></div>
+                                            <span>${room.isClean ? 'Clean' : 'Needs Cleaning'}</span>
+                                        </div>
+                                        <div class="status-item ${room.underMaintenance ? 'status-maintenance' : ''}">
+                                            <div class="status-dot"></div>
+                                            <span>${room.underMaintenance ? 'Under Maintenance' : 'Operational'}</span>
+                                        </div>
                                     </div>
                                 </div>
                             `;
@@ -1180,26 +1309,36 @@
                             html += `
                                 <div class="room-card">
                                     <div class="room-header">
-                                        <div class="room-type">Girls Hostel</div>
+                                        <div class="room-type">${room.hostelType}</div>
                                         <div class="room-icon">🏨</div>
                                     </div>
                                     <div class="room-details-grid">
                                         <div class="detail-item">
                                             <div class="detail-label">Hostel Name</div>
-                                            <div class="detail-value">${room.hostel}</div>
+                                            <div class="detail-value">${room.hostelName}</div>
                                         </div>
                                         <div class="detail-item">
                                             <div class="detail-label">Room Number</div>
                                             <div class="detail-value">${room.room}</div>
                                         </div>
                                         <div class="detail-item">
-                                            <div class="detail-label">Allocation ID</div>
-                                            <div class="detail-value">${techfestId}</div>
+                                            <div class="detail-label">Occupancy</div>
+                                            <div class="detail-value">${room.currentOccupancy}/${room.maxOccupancy}</div>
                                         </div>
                                     </div>
                                     <div class="password-section">
                                         <div class="password-label">Room Password</div>
                                         <div class="password-value">${room.password || 'N/A'}</div>
+                                    </div>
+                                    <div class="status-indicators">
+                                        <div class="status-item ${room.isClean ? 'status-clean' : ''}">
+                                            <div class="status-dot"></div>
+                                            <span>${room.isClean ? 'Clean' : 'Needs Cleaning'}</span>
+                                        </div>
+                                        <div class="status-item ${room.underMaintenance ? 'status-maintenance' : ''}">
+                                            <div class="status-dot"></div>
+                                            <span>${room.underMaintenance ? 'Under Maintenance' : 'Operational'}</span>
+                                        </div>
                                     </div>
                                 </div>
                             `;
@@ -1207,7 +1346,7 @@
                     }
                     
                     if (totalAccommodations === 0) {
-                        html = '<p style="color: rgba(255,255,255,0.7); text-align: center; font-style: italic;">No room allocations found for this ID.</p>';
+                        html = '<p style="color: rgba(255,255,255,0.7); text-align: center; font-style: italic; padding: 40px;">No room allocations found for this ID.</p>';
                     }
                     
                     allocationsContent.innerHTML = html;
@@ -1231,48 +1370,7 @@
         window.addEventListener('load', function() {
             // Load Excel data automatically
             loadExcelFromBackend();
-            
-            // Add some animation to the page
-            document.querySelector('.glass-card').style.animation = 'slideUp 0.8s ease';
         });
-
-        // Add CSS animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideUp {
-                from { 
-                    opacity: 0; 
-                    transform: translateY(50px) scale(0.95); 
-                }
-                to { 
-                    opacity: 1; 
-                    transform: translateY(0) scale(1); 
-                }
-            }
-            
-            @keyframes slideIn {
-                from { 
-                    opacity: 0; 
-                    transform: translateX(-30px); 
-                }
-                to { 
-                    opacity: 1; 
-                    transform: translateX(0); 
-                }
-            }
-            
-            @keyframes fadeInUp {
-                from { 
-                    opacity: 0; 
-                    transform: translateY(30px); 
-                }
-                to { 
-                    opacity: 1; 
-                    transform: translateY(0); 
-                }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
