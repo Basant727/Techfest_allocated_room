@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Techfest Hospitality Allocation System</title>
     
+    <!-- Premium Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Bebas+Neue&family=Montserrat:wght@300;400;600;700&family=Dancing+Script:wght@400;500;600;700&family=Abril+Fatface&display=swap" rel="stylesheet">
     
     <style>
@@ -984,13 +985,16 @@
     </style>
 </head>
 <body>
+    <!-- Enhanced 3D floating elements -->
     <div class="floating-element"></div>
     <div class="floating-element"></div>
     <div class="floating-element"></div>
     
+    <!-- Premium Particles Background -->
     <div class="particles" id="particlesContainer"></div>
 
     <div class="container">
+        <!-- Enhanced 3D Logo with Curves -->
         <div class="logo-3d-container">
             <div class="logo-3d">
                 <div class="sphere-face">TECH</div>
@@ -1002,12 +1006,15 @@
             </div>
         </div>
 
+        <!-- Calligraphic Title -->
         <div class="title-container">
             <h1 class="main-title">TechFest</h1>
             <p class="subtitle">Hospitality Allocation</p>
         </div>
 
+        <!-- Premium Glass Card -->
         <div class="glass-card">
+            <!-- Search Section -->
             <div class="search-section">
                 <div class="input-container">
                     <label class="floating-label">TECHFEST ID</label>
@@ -1025,12 +1032,15 @@
                 </button>
             </div>
 
+            <!-- Loading Spinner -->
             <div class="loading-spinner" id="loadingSpinner"></div>
 
+            <!-- Error Message -->
             <div class="error-message" id="errorMessage">
                 ❌ No allocation found for this Techfest ID
             </div>
 
+            <!-- Results Container -->
             <div class="results-container" id="resultsContainer">
                 <div class="result-card">
                     <div class="result-header">
@@ -1044,7 +1054,8 @@
                     </div>
                     
                     <div id="allocationsContent">
-                        </div>
+                        <!-- Dynamic content will be inserted here -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -1110,7 +1121,7 @@
             }
         }
 
-        // Correct Excel data processing based on your data structure
+        // Correctly processes Excel data, handling multiple comma-separated IDs per cell
         function processExcelData(data) {
             excelData = {};
             
@@ -1126,127 +1137,94 @@
                 currentOccupancyCol = -1, underMaintenanceCol = -1, isCleanCol = -1, 
                 passwordCol = -1, allocatedIdCol = -1;
             
-            // Try to find the header row (first row with column headers)
             for (let i = 0; i < Math.min(5, data.length); i++) {
                 const row = data[i];
                 if (Array.isArray(row)) {
                     for (let j = 0; j < row.length; j++) {
                         const cell = String(row[j]).toLowerCase();
-                        if (cell.includes('hostel_type') || cell.includes('hostel type')) hostelTypeCol = j;
-                        if (cell.includes('hostel_name') || cell.includes('hostel name')) hostelNameCol = j;
-                        if (cell.includes('room_no') || cell.includes('room no')) roomNoCol = j;
-                        if (cell.includes('max_occupancy') || cell.includes('max occupancy')) maxOccupancyCol = j;
-                        if (cell.includes('current_occupancy') || cell.includes('current occupancy')) currentOccupancyCol = j;
-                        if (cell.includes('under_maintainance') || cell.includes('under maintenance')) underMaintenanceCol = j;
-                        if (cell.includes('is_clean') || cell.includes('is clean')) isCleanCol = j;
-                        if (cell.includes('lock_password') || cell.includes('lock password') || cell.includes('password')) passwordCol = j;
-                        if (cell.includes('allocated_to_id') || cell.includes('allocated to') || cell.includes('techfest id')) allocatedIdCol = j;
+                        if (cell.includes('hostel_type')) hostelTypeCol = j;
+                        if (cell.includes('hostel_name')) hostelNameCol = j;
+                        if (cell.includes('room_no')) roomNoCol = j;
+                        if (cell.includes('max_occupancy')) maxOccupancyCol = j;
+                        if (cell.includes('current_occupancy')) currentOccupancyCol = j;
+                        if (cell.includes('under_maintainance')) underMaintenanceCol = j;
+                        if (cell.includes('is_clean')) isCleanCol = j;
+                        if (cell.includes('lock_password')) passwordCol = j;
+                        if (cell.includes('allocated_to_id') || cell.includes('this_room_is_allocated_to')) allocatedIdCol = j;
                     }
-                    
-                    // If we found the key columns, assume this is the header
-                    if (hostelTypeCol !== -1 && hostelNameCol !== -1 && roomNoCol !== -1) {
+                    if (hostelTypeCol !== -1 && hostelNameCol !== -1 && roomNoCol !== -1 && allocatedIdCol !== -1) {
                         headerRow = i;
                         break;
                     }
                 }
             }
             
-            // If we couldn't find specific columns, use a default structure
-            if (hostelTypeCol === -1) hostelTypeCol = 0;
-            if (hostelNameCol === -1) hostelNameCol = 1;
-            if (roomNoCol === -1) roomNoCol = 2;
-            if (maxOccupancyCol === -1) maxOccupancyCol = 3;
-            if (currentOccupancyCol === -1) currentOccupancyCol = 4;
-            if (underMaintenanceCol === -1) underMaintenanceCol = 5;
-            if (isCleanCol === -1) isCleanCol = 6;
-            if (passwordCol === -1) passwordCol = 7;
-            if (allocatedIdCol === -1) allocatedIdCol = 8;
-            
-            console.log('Detected columns:', {
-                hostelTypeCol, hostelNameCol, roomNoCol, maxOccupancyCol, 
-                currentOccupancyCol, underMaintenanceCol, isCleanCol, 
-                passwordCol, allocatedIdCol
-            });
-            
+            if (allocatedIdCol === -1) allocatedIdCol = 8; // Fallback if header not found
+
             // Process data rows (skip header)
             for (let i = headerRow + 1; i < data.length; i++) {
                 const row = data[i];
-                if (row && Array.isArray(row) && row.length > Math.max(
-                    hostelTypeCol, hostelNameCol, roomNoCol, allocatedIdCol
-                )) {
-                    const hostelType = String(row[hostelTypeCol] || '').trim();
-                    const hostelName = String(row[hostelNameCol] || '').trim();
-                    const roomNo = String(row[roomNoCol] || '').trim();
-                    const maxOccupancy = String(row[maxOccupancyCol] || '').trim();
-                    const currentOccupancy = String(row[currentOccupancyCol] || '').trim();
-                    const underMaintenance = String(row[underMaintenanceCol] || '').trim();
-                    const isClean = String(row[isCleanCol] || '').trim();
-                    const lockPassword = String(row[passwordCol] || '').trim();
-                    const allocatedId = String(row[allocatedIdCol] || '').trim().toUpperCase();
-                    
-                    if (allocatedId && allocatedId !== 'NULL' && allocatedId !== 'N/A' && allocatedId !== '') {
-                        // Create array for this ID if it doesn't exist
-                        if (!excelData[allocatedId]) {
-                            excelData[allocatedId] = [];
+                if (row && Array.isArray(row) && row[allocatedIdCol]) {
+                    const allocation = {
+                        hostelType: String(row[hostelTypeCol] || '').trim(),
+                        hostelName: String(row[hostelNameCol] || '').trim(),
+                        room: String(row[roomNoCol] || '').trim(),
+                        maxOccupancy: String(row[maxOccupancyCol] || '').trim(),
+                        currentOccupancy: String(row[currentOccupancyCol] || '').trim(),
+                        underMaintenance: String(row[underMaintenanceCol] || '').trim().toLowerCase() === 'true',
+                        isClean: String(row[isCleanCol] || '').trim().toLowerCase() === 'true',
+                        password: String(row[passwordCol] || '').trim()
+                    };
+
+                    const allocatedIdsString = String(row[allocatedIdCol]).trim().toUpperCase();
+                    const individualIds = allocatedIdsString.split(',');
+
+                    individualIds.forEach(id => {
+                        const trimmedId = id.trim();
+                        if (trimmedId) {
+                            if (!excelData[trimmedId]) {
+                                excelData[trimmedId] = [];
+                            }
+                            excelData[trimmedId].push(allocation);
                         }
-                        
-                        const allocation = {
-                            hostelType: hostelType,
-                            hostelName: hostelName,
-                            room: roomNo,
-                            maxOccupancy: maxOccupancy,
-                            currentOccupancy: currentOccupancy,
-                            underMaintenance: underMaintenance.toLowerCase() === 'true',
-                            isClean: isClean.toLowerCase() === 'true',
-                            password: lockPassword
-                        };
-                        
-                        // Add this allocation to the ID's array
-                        excelData[allocatedId].push(allocation);
-                    }
+                    });
                 }
             }
             
             console.log('Processed Excel Data:', excelData);
-            console.log('Available IDs:', Object.keys(excelData));
         }
 
-        // Create sample data with multiple people per ID appearing in different rows
+
+        // Fallback sample data if Excel file is not found
         function createSampleData() {
             excelData = {
                 '24B3842': [
-                    // 4 Boys in 2 different rooms
-                    { hostelType: 'Boys Hostel', hostelName: 'B', room: '306', maxOccupancy: '4', currentOccupancy: '2', underMaintenance: false, isClean: true, password: '9880' },
-                    { hostelType: 'Boys Hostel', hostelName: 'B', room: '306', maxOccupancy: '4', currentOccupancy: '2', underMaintenance: false, isClean: true, password: '9880' },
-                    { hostelType: 'Boys Hostel', hostelName: 'C', room: '208', maxOccupancy: '2', currentOccupancy: '2', underMaintenance: false, isClean: true, password: '7423' },
-                    { hostelType: 'Boys Hostel', hostelName: 'C', room: '208', maxOccupancy: '2', currentOccupancy: '2', underMaintenance: false, isClean: true, password: '7423' },
-                    // 2 Girls in the same room
-                    { hostelType: 'Girls Hostel', hostelName: 'A', room: '102', maxOccupancy: '2', currentOccupancy: '2', underMaintenance: false, isClean: true, password: '9156' },
-                    { hostelType: 'Girls Hostel', hostelName: 'A', room: '102', maxOccupancy: '2', currentOccupancy: '2', underMaintenance: false, isClean: true, password: '9156' }
-                ],
-                '24B1797': [
-                    { hostelType: 'Boys Hostel', hostelName: 'B', room: '306', maxOccupancy: '4', currentOccupancy: '1', underMaintenance: false, isClean: true, password: '9880' }
-                ],
-                '24A4566': [
-                    { hostelType: 'Boys Hostel', hostelName: '2015 A', room: '101', maxOccupancy: '2', currentOccupancy: '1', underMaintenance: false, isClean: true, password: '12:38' }
+                    // This ID represents 4 boys and 3 girls
+                    // 3 Boys in Room 306
+                    { hostelType: 'Boys Hostel', hostelName: 'B', room: '306', password: '9880' },
+                    { hostelType: 'Boys Hostel', hostelName: 'B', room: '306', password: '9880' },
+                    { hostelType: 'Boys Hostel', hostelName: 'B', room: '306', password: '9880' },
+                    // 1 Boy in Room 208
+                    { hostelType: 'Boys Hostel', hostelName: 'C', room: '208', password: '7423' },
+                    // 2 Girls in Room 102
+                    { hostelType: 'Girls Hostel', hostelName: 'A', room: '102', password: '9156' },
+                    { hostelType: 'Girls Hostel', hostelName: 'A', room: '102', password: '9156' },
+                    // 1 Girl in Room 105
+                    { hostelType: 'Girls Hostel', hostelName: 'A', room: '105', password: '1122' }
                 ]
             };
-            console.log('Sample data created:', excelData);
+            console.log('Sample data created as fallback:', excelData);
         }
 
-        // Helper function to generate room card HTML for a specific person
+        // Generates the HTML card for a single person
         function generatePersonCard(room, personNumber, gender) {
             return `
                 <div class="room-card">
                     <div class="room-header">
-                        <div class="room-type">${gender} ${personNumber} <span class="person-counter">Person</span></div>
+                        <div class="room-type">${gender} ${personNumber}</div>
                         <div class="room-icon">${gender === 'Boy' ? '👦' : '👧'}</div>
                     </div>
                     <div class="room-details-grid">
-                        <div class="detail-item">
-                            <div class="detail-label">Hostel Type</div>
-                            <div class="detail-value">${room.hostelType}</div>
-                        </div>
                         <div class="detail-item">
                             <div class="detail-label">Hostel Name</div>
                             <div class="detail-value">${room.hostelName}</div>
@@ -1260,90 +1238,41 @@
                         <div class="password-label">Room Password</div>
                         <div class="password-value">${room.password || 'N/A'}</div>
                     </div>
-                    <div class="status-indicators">
-                        <div class="status-item ${room.isClean ? 'status-clean' : ''}">
-                            <div class="status-dot"></div>
-                            <span>${room.isClean ? 'Clean' : 'Needs Cleaning'}</span>
-                        </div>
-                        <div class="status-item ${room.underMaintenance ? 'status-maintenance' : ''}">
-                            <div class="status-dot"></div>
-                            <span>${room.underMaintenance ? 'Under Maintenance' : 'Operational'}</span>
-                        </div>
-                    </div>
                 </div>
             `;
         }
 
-        // Helper function to group allocations by room
+        // Groups allocations by room for display purposes
         function groupByRoom(allocations) {
             const grouped = {};
-            
             allocations.forEach(allocation => {
                 const key = `${allocation.hostelName}-${allocation.room}`;
                 if (!grouped[key]) {
-                    grouped[key] = {
-                        hostelType: allocation.hostelType,
-                        hostelName: allocation.hostelName,
-                        room: allocation.room,
-                        maxOccupancy: allocation.maxOccupancy,
-                        currentOccupancy: allocation.currentOccupancy,
-                        underMaintenance: allocation.underMaintenance,
-                        isClean: allocation.isClean,
-                        password: allocation.password,
-                        people: []
-                    };
+                    grouped[key] = { ...allocation, peopleCount: 0 };
                 }
-                grouped[key].people.push(allocation);
+                grouped[key].peopleCount++;
             });
-            
             return grouped;
         }
 
-        // Helper function to determine gender from hostel type
+        // Determines gender from the hostel_type string
         function getGenderFromHostelType(hostelType) {
             const type = hostelType.toLowerCase();
-            if (type.includes('boy') || type.includes('male')) {
-                return 'Boy';
-            } else if (type.includes('girl') || type.includes('female')) {
-                return 'Girl';
-            } else {
-                return 'Participant'; // Default fallback
-            }
+            return type.includes('boy') ? 'Boy' : (type.includes('girl') ? 'Girl' : 'Participant');
         }
 
-        // **NEW** Helper function to generate HTML for a gender-specific section
+        // Generates the HTML for a full gender section (e.g., all boys)
         function generateGenderSectionHtml(allocations, gender) {
-            let sectionHtml = '';
-            const allocationsByRoom = groupByRoom(allocations);
+            let sectionHtml = `<h3 class="accommodation-title">${gender}s' Accommodations</h3>`;
             let personCounter = 1;
-
-            // Add a title for the gender section if needed (e.g., Boys' Accommodations)
-            // sectionHtml += `<h3 class="accommodation-title">${gender}s' Accommodation</h3>`;
-
-            Object.keys(allocationsByRoom).forEach(roomKey => {
-                const roomGroup = allocationsByRoom[roomKey];
-                
-                sectionHtml += `
-                    <div class="room-group">
-                        <div class="room-group-header">
-                            <div class="room-group-title">${roomGroup.hostelName} - Room ${roomGroup.room}</div>
-                            <div class="person-count">${roomGroup.people.length} Person(s)</div>
-                        </div>
-                `;
-                
-                // For each person in the room, generate a card
-                roomGroup.people.forEach(() => {
-                    sectionHtml += generatePersonCard(roomGroup, personCounter, gender);
-                    personCounter++;
-                });
-
-                sectionHtml += `</div>`;
+            allocations.forEach(personAllocation => {
+                sectionHtml += generatePersonCard(personAllocation, personCounter, gender);
+                personCounter++;
             });
-
             return sectionHtml;
         }
-
-        // Main search function - **MODIFIED**
+        
+        // Main search function that powers the application
         function searchAllocation() {
             const techfestIdInput = document.getElementById('techfestId').value.trim().toUpperCase();
             const loadingSpinner = document.getElementById('loadingSpinner');
@@ -1354,60 +1283,47 @@
             const statsText = document.getElementById('statsText');
             const allocationsContent = document.getElementById('allocationsContent');
             
-            // Hide previous results and error
             resultsContainer.classList.remove('show');
             errorMessage.classList.remove('show');
             
-            // Validate input
             if (!techfestIdInput) {
                 showError("Please enter a Techfest ID");
                 return;
             }
             
-            // Split input by commas and trim each ID
-            const techfestIds = techfestIdInput.split(',')
-                .map(id => id.trim())
-                .filter(id => id !== '');
+            const techfestIds = techfestIdInput.split(',').map(id => id.trim()).filter(id => id);
             
             if (techfestIds.length === 0) {
                 showError("Please enter valid Techfest IDs");
                 return;
             }
             
-            // Show loading spinner
             loadingSpinner.classList.add('show');
             
-            // Simulate API call delay
             setTimeout(() => {
                 loadingSpinner.classList.remove('show');
                 
-                // Check if data is loaded
                 if (!excelData) {
                     showError("System data not loaded yet. Please try again.");
                     return;
                 }
                 
-                // Search for all IDs in our data
                 let foundIds = [];
-                let totalAllocations = 0;
-                
+                let totalAllocationsCount = 0;
                 let html = '';
                 
-                // Display allocations by ID
                 techfestIds.forEach(id => {
                     const idAllocations = excelData[id];
                     
                     if (idAllocations && idAllocations.length > 0) {
-                        foundIds.push(id);
-                        totalAllocations += idAllocations.length;
+                        if (!foundIds.includes(id)) foundIds.push(id);
+                        totalAllocationsCount += idAllocations.length;
                         
-                        html += `<div class="id-section-title">Techfest ID: ${id} (${idAllocations.length} Accommodations)</div>`;
+                        html += `<div class="id-section-title">Techfest ID: ${id}</div>`;
                         
-                        // **NEW**: Separate allocations by gender
                         const boysAllocations = idAllocations.filter(a => getGenderFromHostelType(a.hostelType) === 'Boy');
                         const girlsAllocations = idAllocations.filter(a => getGenderFromHostelType(a.hostelType) === 'Girl');
                         
-                        // Generate HTML for boys, then for girls
                         if (boysAllocations.length > 0) {
                             html += generateGenderSectionHtml(boysAllocations, 'Boy');
                         }
@@ -1415,46 +1331,34 @@
                             html += generateGenderSectionHtml(girlsAllocations, 'Girl');
                         }
                         
-                        // Add a separator between different Techfest IDs
-                        html += '<div style="margin: 20px 0; border-bottom: 1px solid rgba(255,215,0,0.2);"></div>';
+                        html += '<hr style="border-color: rgba(255,215,0,0.2); margin: 40px 0;">';
                     }
                 });
                 
-                // Remove the last separator
-                if (html.endsWith('<div style="margin: 20px 0; border-bottom: 1px solid rgba(255,215,0,0.2);"></div>')) {
-                    html = html.slice(0, -85);
+                if (html.endsWith('<hr style="border-color: rgba(255,215,0,0.2); margin: 40px 0;">')) {
+                    html = html.slice(0, -68);
                 }
 
                 if (foundIds.length > 0) {
-                    // Display results
                     displayId.textContent = foundIds.join(', ');
-                    
-                    totalCount.textContent = totalAllocations;
-                    statsText.textContent = `Total Accommodations - ${foundIds.length} ID(s) Found`;
-                    
-                    if (html === '') {
-                        html = '<p style="color: rgba(255,255,255,0.7); text-align: center; font-style: italic; padding: 40px;">No room allocations found for the provided IDs.</p>';
-                    }
-                    
+                    totalCount.textContent = totalAllocationsCount;
+                    statsText.textContent = `Total Allocations for ${foundIds.length} ID(s)`;
                     allocationsContent.innerHTML = html;
                     resultsContainer.classList.add('show');
                 } else {
                     showError(`No allocations found for Techfest ID(s): ${techfestIds.join(', ')}`);
-                    console.log('Available IDs:', Object.keys(excelData));
                 }
             }, 1000);
         }
 
-        // Helper function to show error messages
         function showError(message) {
             const errorMessage = document.getElementById('errorMessage');
             errorMessage.textContent = `❌ ${message}`;
             errorMessage.classList.add('show');
         }
 
-        // Initialize the application when page loads
-        window.addEventListener('load', function() {
-            // Load Excel data automatically
+        window.addEventListener('load', () => {
+            createParticles();
             loadExcelFromBackend();
         });
     </script>
